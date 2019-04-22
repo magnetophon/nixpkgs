@@ -24563,6 +24563,8 @@ in
 
   faust2firefox = callPackage ../applications/audio/faust/faust2firefox.nix { };
 
+  faust2jackrust = callPackage ../applications/audio/faust/faust2jackrust.nix { };
+
   faust2jack = callPackage ../applications/audio/faust/faust2jack.nix { };
 
   faust2jaqt = callPackage ../applications/audio/faust/faust2jaqt.nix { };
