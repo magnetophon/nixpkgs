@@ -3,25 +3,35 @@
 , fetchFromGitHub
 , makeWrapper
 , pkgconfig
+, cmake
 , llvm
 , emscripten
 , openssl
 , libsndfile
 , libmicrohttpd
+, gnutls
+, libtasn1
+, p11-kit
 , vim
+, which
 }:
 
 with stdenv.lib.strings;
 
 let
 
-  version = "2.5.23";
+  # version = "2.5.23";
+  # version = "d1c68543a4445a1f34a97bc51a704ea809b93c41";
+  # version = "942b28e83d61234c38148cb4d81e53531071d636";
+  version = "2.15.11";
 
   src = fetchFromGitHub {
     owner = "grame-cncm";
     repo = "faust";
     rev = version;
-    sha256 = "1pci8ac6sqrm3mb3yikmmr3iy35g3nj4iihazif1amqkbdz719rc";
+    # sha256 = "1pci8ac6sqrm3mb3yikmmr3iy35g3nj4iihazif1amqkbdz719rc";
+    # sha256 = "13l0fc53flssjx4fisgnp6dlw98d5fchx0p5qfzynxwh70kj6jia";
+    sha256 = "10mmpfjyd9cyq8m49m0lg0779fizm3svz1961r44inrzlz0075vy";
     fetchSubmodules = true;
   };
 
@@ -40,8 +50,8 @@ let
 
     inherit src;
 
-    nativeBuildInputs = [ makeWrapper pkgconfig vim ];
-    buildInputs = [ llvm emscripten openssl libsndfile libmicrohttpd ];
+    nativeBuildInputs = [ makeWrapper pkgconfig cmake vim which ];
+    buildInputs = [ llvm emscripten openssl libsndfile libmicrohttpd gnutls libtasn1 p11-kit ];
 
 
     passthru = {
@@ -50,7 +60,8 @@ let
 
 
     preConfigure = ''
-      makeFlags="$makeFlags prefix=$out LLVM_CONFIG='${llvm}/bin/llvm-config' world"
+      cd build
+      # makeFlags="$makeFlags prefix=$out LLVM_CONFIG='${llvm}/bin/llvm-config' "
 
       # The faust makefiles use 'system ?= $(shell uname -s)' but nix
       # defines 'system' env var, so undefine that so faust detects the
@@ -70,19 +81,34 @@ let
       #
       # For now, fix this by 1) pinning the llvm version; 2) manually setting LLVM_VERSION
       # to something the makefile will recognize.
-      sed '52iLLVM_VERSION=${stdenv.lib.getVersion llvm}' -i compiler/Makefile.unix
+      # sed '52iLLVM_VERSION=${stdenv.lib.getVersion llvm}' -i compiler/Makefile.unix
     '';
 
     postPatch = ''
       # fix build with llvm 5.0.2 by adding it to the list of known versions
       # TODO: check if still needed on next update
-      substituteInPlace compiler/Makefile.unix \
-        --replace "5.0.0 5.0.1" "5.0.0 5.0.1 5.0.2"
+      # substituteInPlace compiler/Makefile.unix \
+        # --replace "5.0.0 5.0.1" "5.0.0 5.0.1 5.0.2"
+    '';
+
+    cmakeFlags = ''
+      -C ../backends/all.cmake -C ../targets/all.cmake ..
     '';
 
     # Remove most faust2appl scripts since they won't run properly
     # without additional paths setup. See faust.wrap,
     # faust.wrapWithBuildEnv.
+      # for source_file in "$FAUSTLIB"/*; do
+        # substituteInPlace "$source_file" \
+          # --replace '#include "' '#include "$FAUSTINC/'
+      # done
+
+      # for source_file in $(find $out/include -name '*.cpp'  -o -name '*.h'); do
+        # echo $source_file
+        # substituteInPlace "$source_file" \
+          # --replace '#include "' '#include "$out/include/'
+  # done
+
     postInstall = ''
       # syntax error when eval'd directly
       pattern="faust2!(*@(atomsnippets|graph|graphviewer|md|plot|sig|sigviewer|svg))"
@@ -105,6 +131,12 @@ let
         wrapProgram "$script" \
           --prefix PATH : "$out"/bin
       done
+
+       # for source_file in $(find "$out"/share/faust -regex '.*/.*\.\(c\|cpp\|h\)$' ); do
+         # echo $source_file
+         # substituteInPlace "$source_file" \
+           # --replace '#include "' '#include "../../include/'
+       # done
     '';
 
     meta = meta // {
@@ -162,7 +194,9 @@ let
           substituteInPlace "$script" \
             --replace ". faustpath" ". '${faust}/bin/faustpath'" \
             --replace ". faustoptflags" ". '${faust}/bin/faustoptflags'" \
-            --replace " error " "echo"
+            --replace " error " "echo" \
+            --replace "#-------------------------------------------------------------------" "echo FAUSTLIB && echo \$FAUSTLIB && echo  FAUSTINC && echo \$FAUSTINC " \
+            --replace 'ARCHFILE="' 'ARCHFILE="$FAUSTLIB/'
         done
       '';
 
@@ -200,6 +234,7 @@ let
 
       propagatedBuildInputs = [ faust ] ++ propagatedBuildInputs;
 
+      libPath = stdenv.lib.makeLibraryPath propagatedBuildInputs;
 
       postFixup = ''
 
@@ -212,7 +247,8 @@ let
             --prefix PATH : "$PATH" \
             --prefix PKG_CONFIG_PATH : "$PKG_CONFIG_PATH" \
             --set NIX_CFLAGS_COMPILE "$NIX_CFLAGS_COMPILE" \
-            --set NIX_LDFLAGS "$NIX_LDFLAGS"
+            --set NIX_LDFLAGS "$NIX_LDFLAGS" \
+            --prefix LIBRARY_PATH $libPath
         done
       '';
     });
