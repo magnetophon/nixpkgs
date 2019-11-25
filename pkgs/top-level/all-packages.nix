@@ -5263,6 +5263,9 @@ in
 
   nnn = callPackage ../applications/misc/nnn { };
 
+
+  noise-repellent = callPackage ../applications/audio/noise-repellent { };
+
   notary = callPackage ../tools/security/notary { };
 
   notify-osd = callPackage ../applications/misc/notify-osd { };
