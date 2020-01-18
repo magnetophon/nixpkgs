@@ -3,16 +3,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "wmfocus";
-  version = "1.1.2";
+  version = "1.1.3";
 
   src = fetchFromGitHub {
     owner = "svenstaro";
     repo = pname;
     rev = version;
-    sha256 = "0jx0h2zyghs3bp4sg8f3vk5rkyprz2dqfqs0v72vmkp3cvgzxbvs";
+    sha256 = "17qdsqp9072yr7rcm6g1h620rff95ldawr8ldpkbjmkh0rc86skn";
   };
 
-  cargoSha256 = "1xmc28ns59jcmnv17102s2084baxqdvi0ibbyqwb108385qnixzf";
+  cargoSha256 = "1jhsz3swqkzi6xp8kjcp3hi39id0d8spx3zhxv1asfk47sc65drp";
 
   nativeBuildInputs = [ python3 pkgconfig ];
   buildInputs = [ cairo libxkbcommon xorg.xcbutilkeysyms ];
