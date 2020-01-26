@@ -248,7 +248,7 @@ let
             --prefix PATH : "$PATH" \
             --prefix PKG_CONFIG_PATH : "$PKG_CONFIG_PATH" \
             --set NIX_CFLAGS_COMPILE "$NIX_CFLAGS_COMPILE" \
-            --set NIX_LDFLAGS "$NIX_LDFLAGS" \
+            --set NIX_LDFLAGS "$NIX_LDFLAGS -lpthread" \
             --prefix LIBRARY_PATH $libPath
         done
       '';
