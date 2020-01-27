@@ -56,53 +56,11 @@ let
 
     preConfigure = ''
       cd build
-      # makeFlags="$makeFlags prefix=$out LLVM_CONFIG='${llvm}/bin/llvm-config' "
-
-      # The faust makefiles use 'system ?= $(shell uname -s)' but nix
-      # defines 'system' env var, so undefine that so faust detects the
-      # correct system.
-      # unset system
-      # sed -e "232s/LLVM_STATIC_LIBS/LLVMLIBS/" -i compiler/Makefile.unix
-
-      # The makefile sets LLVM_<version> depending on the current llvm
-      # version, but the detection code is quite brittle.
-      #
-      # Failing to properly detect the llvm version means that the macro
-      # LLVM_VERSION ends up being the raw output of `llvm-config --version`, while
-      # the code assumes that it's set to a symbol like `LLVM_35`.  Two problems result:
-      # * <command-line>:0:1: error: macro names must be identifiers.; and
-      # * a bunch of undefined reference errors due to conditional definitions relying on
-      #   LLVM_XY being defined.
-      #
-      # For now, fix this by 1) pinning the llvm version; 2) manually setting LLVM_VERSION
-      # to something the makefile will recognize.
-      # sed '52iLLVM_VERSION=${stdenv.lib.getVersion llvm}' -i compiler/Makefile.unix
     '';
-
-    # postPatch = ''
-      # fix build with llvm 5.0.2 by adding it to the list of known versions
-      # TODO: check if still needed on next update
-      # substituteInPlace compiler/Makefile.unix \
-        # --replace "5.0.0 5.0.1" "5.0.0 5.0.1 5.0.2"
-    # '';
 
     cmakeFlags = ''
       -C ../backends/all.cmake -C  ../targets/all.cmake ..
     '';
-
-    # Remove most faust2appl scripts since they won't run properly
-    # without additional paths setup. See faust.wrap,
-    # faust.wrapWithBuildEnv.
-      # for source_file in "$FAUSTLIB"/*; do
-        # substituteInPlace "$source_file" \
-          # --replace '#include "' '#include "$FAUSTINC/'
-      # done
-
-      # for source_file in $(find $out/include -name '*.cpp'  -o -name '*.h'); do
-        # echo $source_file
-        # substituteInPlace "$source_file" \
-          # --replace '#include "' '#include "$out/include/'
-  # done
 
     postInstall = ''
       # syntax error when eval'd directly
@@ -126,12 +84,6 @@ let
         wrapProgram "$script" \
           --prefix PATH : "$out"/bin
       done
-
-       # for source_file in $(find "$out"/share/faust -regex '.*/.*\.\(c\|cpp\|h\)$' ); do
-         # echo $source_file
-         # substituteInPlace "$source_file" \
-           # --replace '#include "' '#include "../../include/'
-       # done
     '';
 
     meta = meta // {
@@ -153,11 +105,6 @@ let
         Install faust2* for specific faust2appl scripts.
       '';
     };
-
-  # qmakeFlags = [
-                 # "LIBS+=-L${jack2Full}/lib"
-                 # "INCLUDEPATH+=${jack2Full}/include"
-                 # ];
   };
 
   # Default values for faust2appl.
@@ -186,19 +133,15 @@ let
         runHook postInstall
       '';
 
-            # --replace ". faustpath" ". '${faust}/bin/faustpath'" \
-            # --replace ". faustoptflags" ". '${faust}/bin/faustoptflags'" \
       postInstall = ''
         # For the faust2appl script, change 'faustpath' and
         # 'faustoptflags' to absolute paths.
         for script in "$out"/bin/*; do
           substituteInPlace "$script" \
-            --replace " error " "echo" \
-            --replace "#-------------------------------------------------------------------" "echo FAUSTLIB && echo \$FAUSTLIB && echo  FAUSTINC && echo \$FAUSTINC "
+            --replace " error " "echo"
         done
       '';
 
-            # --replace 'ARCHFILE="' 'ARCHFILE="$FAUSTLIB/'
       meta = meta // {
         description = "The ${baseName} script, part of faust functional programming language for realtime audio signal processing";
       };
@@ -235,7 +178,6 @@ let
 
       libPath = stdenv.lib.makeLibraryPath propagatedBuildInputs;
 
-            # --set FAUST_LIB_PATH "${faust}/share/faust" \
       postFixup = ''
 
         # export parts of the build environment
