@@ -6360,10 +6360,9 @@ in
 
   rdma-core = callPackage ../os-specific/linux/rdma-core { };
 
+  react-native-debugger = callPackage ../development/tools/react-native-debugger { };
 
   real_time_config_quick_scan = callPackage ../applications/audio/real_time_config_quick_scan { };
-
-  react-native-debugger = callPackage ../development/tools/react-native-debugger { };
 
   read-edid = callPackage ../os-specific/linux/read-edid { };
 
