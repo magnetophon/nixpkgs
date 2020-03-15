@@ -649,6 +649,12 @@ lib.mapAttrs (n: v: v // { shortName = n; }) {
     url = http://metadata.ftp-master.debian.org/changelogs/main/d/debianutils/debianutils_4.8.1_copyright;
   };
 
+  stk = {
+    shortName = "stk";
+    fullName = "Synthesis Tool Kit 4.3";
+    url = https://github.com/thestk/stk/blob/master/LICENSE;
+  };
+
   tcltk = spdx {
     spdxId = "TCL";
     fullName = "TCL/TK License";
