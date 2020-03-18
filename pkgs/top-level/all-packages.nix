@@ -21833,6 +21833,8 @@ in
 
   tambura = callPackage ../applications/audio/tambura { };
 
+  tamgamp.lv2 = callPackage ../applications/audio/tamgamp.lv2 { };
+
   teams = callPackage ../applications/networking/instant-messengers/teams { };
 
   teamspeak_client = libsForQt512.callPackage ../applications/networking/instant-messengers/teamspeak/client.nix { };
