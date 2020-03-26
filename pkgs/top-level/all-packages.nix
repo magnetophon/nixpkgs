@@ -3664,6 +3664,8 @@ in
 
   genimage = callPackage ../tools/filesystems/genimage { };
 
+  geonkick = callPackage ../applications/audio/geonkick {};
+
   gerrit = callPackage ../applications/version-management/gerrit { };
 
   geteltorito = callPackage ../tools/misc/geteltorito { };
