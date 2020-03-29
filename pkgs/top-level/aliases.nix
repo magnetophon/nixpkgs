@@ -419,6 +419,7 @@ mapAliases ({
   sdlmame = mame; # added 2019-10-30
   seg3d = throw "seg3d has been removed from nixpkgs (2019-11-10)";
   shared_mime_info = shared-mime-info; # added 2018-02-25
+  sisco.lv2 = throw "sisco.lv2 has been removed from nixpkgs, as it's already in x42-plugins"; # added 2020-03-29
   skrooge2 = skrooge; # added 2017-02-18
   skype = skypeforlinux; # added 2017-07-27
   skydive = throw "skydive has been removed from nixpkgs (2019-09-10)";
