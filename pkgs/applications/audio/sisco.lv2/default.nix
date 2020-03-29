@@ -1,38 +1,24 @@
-{ stdenv, fetchFromGitHub, lv2, pkgconfig, libGLU, libGL, cairo, pango, libjack2 }:
+{ stdenv, fetchFromGitHub, pkgconfig
+, lv2, libGLU, libGL, cairo, pango, libjack2 }:
 
-let
-  name = "sisco.lv2-${version}";
-  version = "0.7.0";
-
-  robtkVersion = "80a2585253a861c81f0bfb7e4579c75f5c73af89";
-  robtkName = "robtk-${robtkVersion}";
-
-  src = fetchFromGitHub {
-    owner = "x42";
-    repo = "sisco.lv2";
-    rev = "v${version}";
-    sha256 = "1r6g29yqbdqgkh01x6d3nvmvc58rk2dp94fd0qyyizq37a1qplj1";
-  };
-
-  robtkSrc = fetchFromGitHub {
-    owner = "x42";
-    repo = "robtk";
-    rev = robtkVersion;
-    sha256 = "0gk16nrvnrffqqw0yd015kja9wkgbzvb648bl1pagriabhznhfxl";
-  };
-in
 stdenv.mkDerivation rec {
-  inherit name;
 
-  srcs = [ src robtkSrc ];
-  sourceRoot = src.name;
+  version = "0.8.5";
+  pname = "sisco.lv2";
+
+  src = fetchFromGitHub  {
+    owner = "x42";
+    repo = pname;
+    rev = "v${version}";
+    sha256 = "14nagi0pxf32hk5syhm2cyzpc471vpc68s683z0p8sn3cifviqy2";
+    fetchSubmodules = true;
+  };
 
   nativeBuildInputs = [ pkgconfig ];
   buildInputs = [ lv2 pango cairo libjack2 libGLU libGL ];
 
-  postUnpack = "chmod u+w -R ${robtkName}-src; mv ${robtkName}-src/* ${sourceRoot}/robtk";
   sisco_VERSION = version;
-  preConfigure = "makeFlagsArray=(PREFIX=$out)";
+  preConfigure = "makeFlagsArray=( PREFIX=$out )";
 
   meta = with stdenv.lib; {
     description = "Simple audio oscilloscope with variable time scale, triggering, cursors and numeric readout in LV2 plugin format";
