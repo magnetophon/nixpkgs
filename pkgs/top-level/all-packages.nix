@@ -20984,6 +20984,8 @@ in
     geoip = geoipWithDatabase;
   };
 
+  ninjas2 = callPackage ../applications/audio/ninjas2 {};
+
   notion = callPackage ../applications/window-managers/notion { };
 
   nootka = qt5.callPackage ../applications/audio/nootka { };
