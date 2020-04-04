@@ -2,13 +2,16 @@
 
 stdenv.mkDerivation rec {
   pname = "geonkick";
-  version = "1.10.0";
+  # version = "1.10.0";
+  version = "unstable";
 
   src = fetchFromGitLab {
     owner = "geontime";
     repo = pname;
-    rev = "v${version}";
-    sha256 = "1a59wnm4035kjhs66hihlkiv45p3ffb2yaj1awvyyi5f0lds5zvh";
+    rev = "8a4a729d312a801e4a3c9653e3de44da03795caf";
+    sha256 = "0srbplal5k0plmhxzaf4mpxmvvhayqj3mscgh7wh8ipjybcfpqky";
+    # rev = "v${version}";
+    # sha256 = "1a59wnm4035kjhs66hihlkiv45p3ffb2yaj1awvyyi5f0lds5zvh";
   };
 
   nativeBuildInputs = [ cmake pkgconfig ];
