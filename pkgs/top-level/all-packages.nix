@@ -18807,6 +18807,8 @@ in
 
   bchoppr = callPackage ../applications/audio/bchoppr { };
 
+  bjumblr = callPackage ../applications/audio/bjumblr { };
+
   bsequencer = callPackage ../applications/audio/bsequencer { };
 
   bslizr = callPackage ../applications/audio/bslizr { };
