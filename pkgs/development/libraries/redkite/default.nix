@@ -2,15 +2,13 @@
 
 stdenv.mkDerivation rec {
   pname = "redkite";
-  version = "0.8.0";
+  version = "0.8.1";
 
   src = fetchFromGitLab {
     owner = "geontime";
     repo = pname;
-    rev = "348d65511a52b24df18024d4fce971b47fd2e6e4";
-    sha256 = "0gv0zs4vpabw1gkbsgv6dgzxmzr2kyv5f2iz8hbqkxz0yazs4d2l";
-    # rev = "v${version}";
-    # sha256 = "1747w1kg8y9jbl11xi018d85dm38xk7843pz26sh0k5fdv87a10q";
+    rev = "v${version}";
+    sha256 = "17kv2jc4jvn3sdicz3sf8dnf25wbvv7ijzkr0mm0sbrrjz6vrwz0";
   };
 
   nativeBuildInputs = [ cmake ];
