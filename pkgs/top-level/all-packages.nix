@@ -4505,6 +4505,8 @@ in
 
   k2pdfopt = callPackage ../applications/misc/k2pdfopt { };
 
+  kapitonov-plugins-pack = callPackage ../applications/audio/Kapitonov-Plugins-Pack  { };
+
   kargo = callPackage ../tools/misc/kargo { };
 
   kazam = callPackage ../applications/video/kazam { };
