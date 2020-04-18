@@ -41,6 +41,12 @@ stdenv.mkDerivation rec {
     cp -r resources/data/* $out/share/surge/
   '';
 
+  doInstallCheck = true;
+  installCheckPhase = ''
+    ./build-linux.sh build -p headless
+    ./target/headless/Release/Surge/Surge-Headless
+  '';
+
   meta = with stdenv.lib; {
     description = "LV2 & VST Synthesizer plug-in (previously released as Vember Audio Surge)";
     homepage = "https://surge-synthesizer.github.io";
