@@ -4,13 +4,14 @@ with stdenv.lib;
 
 stdenv.mkDerivation rec {
   pname = "premake5";
-  version = "5.0.0-alpha12";
+  version = "5.0.0-alpha14";
 
   src = fetchFromGitHub {
     owner = "premake";
     repo = "premake-core";
     rev = "v${version}";
-    sha256 = "1h3hr96pdz94njn4bg02ldcz0k5j1x017d8svc7fdyvl2b77nqzf";
+    sha256 = "15pbx08l8549m2vqn1ild2ckc27awcp4741dchqzff9g24zbxiq0";
+    fetchSubmodules = true;
   };
 
   buildInputs = optionals stdenv.isDarwin [ Foundation readline ];
