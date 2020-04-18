@@ -25,6 +25,8 @@ stdenv.mkDerivation rec {
   patchPhase = ''
     patchShebangs build-linux.sh
     substituteInPlace src/common/SurgeStorage.cpp --replace "/usr/share/Surge" "$out/share/surge"
+    substituteInPlace src/linux/UserInteractionsLinux.cpp --replace 'execlp("zenity"' 'execlp("${gnome3.zenity}/bin/zenity"'
+    substituteInPlace src/common/gui/PopupEditorDialog.cpp --replace zenity ${gnome3.zenity}/bin/zenity
   '';
 
   configurePhase = ''
