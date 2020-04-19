@@ -6949,6 +6949,8 @@ in
     pythonPackages = python3Packages;
   };
 
+  temper = callPackage ../applications/audio/temper { };
+
   termplay = callPackage ../tools/misc/termplay { };
 
   tewisay = callPackage ../tools/misc/tewisay { };
