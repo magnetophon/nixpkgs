@@ -11205,6 +11205,8 @@ in
 
   aubio = callPackage ../development/libraries/aubio { };
 
+  audec = callPackage ../development/libraries/audec  { };
+
   audiofile = callPackage ../development/libraries/audiofile {
     inherit (darwin.apple_sdk.frameworks) AudioUnit CoreServices;
   };
