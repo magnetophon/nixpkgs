@@ -6129,6 +6129,8 @@ in
 
   pubs = callPackage ../tools/misc/pubs {};
 
+  punch = callPackage ../applications/audio/punch { };
+
   pv = callPackage ../tools/misc/pv { };
 
   pwgen = callPackage ../tools/security/pwgen { };
