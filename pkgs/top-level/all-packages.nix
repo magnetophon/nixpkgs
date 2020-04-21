@@ -20674,6 +20674,7 @@ in
     ConstantDetuneChorus  = callPackage ../applications/audio/magnetophonDSP/ConstantDetuneChorus { };
     faustCompressors =  callPackage ../applications/audio/magnetophonDSP/faustCompressors { };
     LazyLimiter = callPackage ../applications/audio/magnetophonDSP/LazyLimiter { };
+    LLng2 = callPackage ../applications/audio/magnetophonDSP/LazyLimiter/LLng2.nix { };
     MBdistortion = callPackage ../applications/audio/magnetophonDSP/MBdistortion { };
     pluginUtils = callPackage ../applications/audio/magnetophonDSP/pluginUtils  { };
     RhythmDelay = callPackage ../applications/audio/magnetophonDSP/RhythmDelay { };
