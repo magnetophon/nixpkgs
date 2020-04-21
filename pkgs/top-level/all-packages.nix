@@ -18598,6 +18598,8 @@ in
     inherit (gnome2) libgnomecanvas libgnomecanvasmm;
   };
 
+  ardour6 = callPackage ../applications/audio/ardour/ardour6.nix {};
+
   arelle = with python3Packages; toPythonApplication arelle;
 
   argo = callPackage ../applications/networking/cluster/argo {
