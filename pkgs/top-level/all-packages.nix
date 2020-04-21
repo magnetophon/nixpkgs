@@ -2178,6 +2178,8 @@ in
 
   socklog = callPackage ../tools/system/socklog { };
 
+  squeezer = callPackage ../applications/audio/squeezer { };
+
   stagit = callPackage ../development/tools/stagit { };
 
   step-ca = callPackage ../tools/security/step-ca { };
