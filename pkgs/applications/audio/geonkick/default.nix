@@ -2,13 +2,13 @@
 
 stdenv.mkDerivation rec {
   pname = "geonkick";
-  version = "2.0.1";
+  version = "2.0.2";
 
   src = fetchFromGitLab {
     owner = "iurie-sw";
     repo = pname;
     rev = "v${version}";
-    sha256 = "0ld8rdvl5v3pg30zwb8zdznf2cfsfglsx0sb30v17zfgcvgmvhzz";
+    sha256 = "0rfy0pa7h65ww62fhwycksfwxry77blmz8f9dj2mc5b0wpvdv2i1";
   };
 
   nativeBuildInputs = [ cmake pkgconfig ];
@@ -21,7 +21,7 @@ stdenv.mkDerivation rec {
 
 
   meta = {
-    homepage = "https://gitlab.com/geontime/geonkick";
+    homepage = "https://gitlab.com/iurie-sw/geonkick";
     description = "A free software percussion synthesizer";
     license = stdenv.lib.licenses.gpl3;
     platforms = stdenv.lib.platforms.linux;
