@@ -1846,6 +1846,8 @@ in
 
   futhark = haskell.lib.justStaticExecutables haskellPackages.futhark;
 
+  fverb = callPackage ../applications/audio/fverb { };
+
   fwup = callPackage ../tools/misc/fwup { };
 
   fx_cast_bridge = callPackage ../tools/misc/fx_cast { };
