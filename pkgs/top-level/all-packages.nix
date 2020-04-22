@@ -3600,6 +3600,8 @@ in
 
   fusee-launcher = callPackage ../development/tools/fusee-launcher { };
 
+  fverb = callPackage ../applications/audio/fverb { };
+
   fwknop = callPackage ../tools/security/fwknop { };
 
   exfat = callPackage ../tools/filesystems/exfat { };
