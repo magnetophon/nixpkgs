@@ -5,7 +5,7 @@ stdenv.mkDerivation rec {
   version = "0.8.1";
 
   src = fetchFromGitLab {
-    owner = "geontime";
+    owner = "iurie-sw";
     repo = pname;
     rev = "v${version}";
     sha256 = "17kv2jc4jvn3sdicz3sf8dnf25wbvv7ijzkr0mm0sbrrjz6vrwz0";
@@ -18,7 +18,7 @@ stdenv.mkDerivation rec {
   enableParallelBuilding = true;
 
   meta = {
-    homepage = "https://gitlab.com/geontime/redkite";
+    homepage = "https://gitlab.com/iurie-sw/redkite";
     description = "A small GUI toolkit";
     license = stdenv.lib.licenses.gpl3;
     platforms = stdenv.lib.platforms.linux;
