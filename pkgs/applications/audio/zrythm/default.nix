@@ -4,7 +4,7 @@
 , meson
 , ninja
 , cmake
-, pkgconfig
+, pkg-config
 , python3Packages
 , help2man
 , python3
@@ -53,13 +53,18 @@ stdenv.mkDerivation rec {
     sha256 = "0m7i8f5y3lvkbflys0iblkl6ksw6kn2b64k6gy10yd549n8adx69";
   };
 
-  prePatch = ''
-    # doesn't work:
-    # patchShebangs resources/gen_gtk_resources_xml_wrap.sh
-    substituteInPlace resources/gen_gtk_resources_xml_wrap.sh --replace "/usr/bin/env sh" "${bash}/bin/sh"
-  '';
-
-  nativeBuildInputs = [ audec gtk3 wrapGAppsHook meson ninja cmake pkgconfig python3Packages.sphinx help2man python3 libxml2 ];
+  nativeBuildInputs = [
+    audec
+    gtk3
+    wrapGAppsHook
+    meson
+    ninja
+    pkg-config
+    python3Packages.sphinx
+    help2man
+    python3
+    libxml2
+  ];
 
   buildInputs = [
     guile
@@ -101,8 +106,13 @@ stdenv.mkDerivation rec {
     "-Duser_manual=true"
   ];
 
+  postPatch = ''
+    chmod +x resources/gen_gtk_resources_xml_wrap.sh # patchShebangs only works on executable files
+    patchShebangs resources/gen_gtk_resources_xml_wrap.sh
+  '';
+
   preInstall = ''
-    patchShebangs meson_post_install_wrap.sh
+    patchShebangs meson_post_install_wrap.sh # gets created during build.
   '';
 
   meta = with stdenv.lib; {
@@ -110,6 +120,6 @@ stdenv.mkDerivation rec {
     description = "highly automated and intuitive digital audio workstation";
     maintainers = [ maintainers.magnetophon ];
     platforms = platforms.linux;
-    license = licenses.gpl3;
+    license = licenses.agpl3Plus;
   };
 }
