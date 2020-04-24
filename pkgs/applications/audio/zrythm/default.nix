@@ -1,5 +1,6 @@
 { stdenv
 , fetchFromGitHub
+, bash
 , meson
 , ninja
 , cmake
@@ -7,6 +8,7 @@
 , python3Packages
 , help2man
 , python3
+, libxml2
 , audec
 , gtk3
 , wrapGAppsHook
@@ -51,12 +53,15 @@ stdenv.mkDerivation rec {
     sha256 = "0m7i8f5y3lvkbflys0iblkl6ksw6kn2b64k6gy10yd549n8adx69";
   };
 
-  nativeBuildInputs = [ meson ninja cmake pkgconfig python3Packages.sphinx help2man python3 ];
+  prePatch = ''
+    # doesn't work:
+    # patchShebangs resources/gen_gtk_resources_xml_wrap.sh
+    substituteInPlace resources/gen_gtk_resources_xml_wrap.sh --replace "/usr/bin/env sh" "${bash}/bin/sh"
+  '';
+
+  nativeBuildInputs = [ audec gtk3 wrapGAppsHook meson ninja cmake pkgconfig python3Packages.sphinx help2man python3 libxml2 ];
 
   buildInputs = [
-    audec
-    gtk3
-    wrapGAppsHook
     guile
     gtksourceview
     lilv
@@ -95,6 +100,10 @@ stdenv.mkDerivation rec {
     "-Dmanpage=true"
     "-Duser_manual=true"
   ];
+
+  preInstall = ''
+    patchShebangs meson_post_install_wrap.sh
+  '';
 
   meta = with stdenv.lib; {
     homepage = "https://www.zrythm.org";
