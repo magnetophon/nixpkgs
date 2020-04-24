@@ -15,7 +15,7 @@ stdenv.mkDerivation rec {
     libyaml
   ];
 
-  installFlags = [ "PREFIX=$(out)" ];
+  makeFlags = [ "PREFIX=${placeholder "out"}" ];
 
   meta = with stdenv.lib; {
     description = "C library for reading and writing YAML";
