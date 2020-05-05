@@ -2,14 +2,14 @@
 
 stdenv.mkDerivation rec {
   pname = "Punch";
-  version = "unstable-2020-04-05";
+  version = "unstable-2020-04-28";
 
   src = fetchFromGitHub {
     owner = "clearly-broken-software";
     repo = pname;
-    rev = "4ad268c1a75cc7c0cc5d94da7183e97d8a915ae2";
-    sha256 = "11cc0s2i4f9ril9mb2lg8kd5xndblvwm90x445wy3zzcakw5vap6";
-    # fetchSubmodules = true;
+    rev = "c50eb0548aa08df67efc447660e01fb03b9002b7";
+    sha256 = "1ypq8x011ljvjqixpdjjb2nzhv7mvxvmkrhq0rp5k884cyycnpry";
+    fetchSubmodules = true;
   };
 
   patchPhase = ''
