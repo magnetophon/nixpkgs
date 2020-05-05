@@ -14380,6 +14380,8 @@ in
 
   lvtk = callPackage ../development/libraries/audio/lvtk { };
 
+  lvtk-cyclopsian = callPackage ../development/libraries/audio/lvtk/cyclopsian.nix { };
+
   qradiolink = callPackage ../applications/radio/qradiolink { };
 
   qrupdate = callPackage ../development/libraries/qrupdate { };
@@ -19442,6 +19444,8 @@ in
   fmit = libsForQt5.callPackage ../applications/audio/fmit { };
 
   fmsynth = callPackage ../applications/audio/fmsynth { };
+
+  fmsynth-cyclopsian = callPackage ../applications/audio/fmsynth/cyclopsian.nix { };
 
   focuswriter = libsForQt5.callPackage ../applications/editors/focuswriter { };
 
