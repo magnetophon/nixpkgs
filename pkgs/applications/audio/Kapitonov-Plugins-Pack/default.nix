@@ -2,13 +2,13 @@
 
 stdenv.mkDerivation rec {
   pname = "Kapitonov-Plugins-Pack";
-  version = "1.1";
+  version = "1.2.1";
 
   src = fetchFromGitHub {
     owner = "olegkapitonov";
     repo = pname;
-    rev = "v${version}";
-    sha256 = "01ww3a0vdvx2l655f219p3159q6d3hph9i3g9siplv34b12rxxbn";
+    rev = version;
+    sha256 = "1mxi7b1vrzg25x85lqk8c77iziqrqyz18mqkfjlz09sxp5wfs9w4";
   };
 
   nativeBuildInputs = [
@@ -30,10 +30,6 @@ stdenv.mkDerivation rec {
     libxcb
     xcbutilwm
   ];
-
-  postPatch = ''
-    substituteInPlace LV2/kpp_tubeamp/kpp_tubeamp_ui.src/kpp_tubeamp_gui.c --replace zenity ${gnome3.zenity}/bin/zenity
-  '';
 
   meta = with stdenv.lib; {
     description = "Set of LADSPA and LV2 plugins for guitar sound processing";
