@@ -1,24 +1,11 @@
 { stdenv, fetchgit, alsaLib, aubio, boost, cairomm, curl, doxygen
 , fftwSinglePrec, flac, glibc, glibmm, graphviz, gtkmm2, libjack2
-, liblo, libogg, readline, webkit
+, libgnomecanvas, libgnomecanvasmm, liblo, libogg
 , librdf_raptor, librdf_rasqal, libsamplerate, libsigcxx, libsndfile
 , libusb, libuuid, libxml2, libxslt, lilv, lrdf, lv2, makeWrapper
-, perl, pkgconfig, python, rubberband, serd, sord, sratom
+, perl, pkgconfig, python2, rubberband, serd, sord, sratom
 , taglib, vamp-plugin-sdk, dbus, fftw, pango, suil, libarchive
 , wafHook }:
-
-# 'cppunit' >= 1.12.0                     : not found
-# Checking for 'libwebsockets' >= 2.0.0                : not found
-# Checking for 'lv2' >= 1.17.2                         : not found
-#  * Build documentation                               : False
-#  * Beatbox test app                                  : False
-#  * Freedesktop files                                 : False
-#  * Lua Binding Doc                                   : False
-#  * Process thread timing                             : False
-#
-#(15:12:50) rgareus: magnetophon: That's odd, I have only seen this with windows asm. The "-D" flag is not ignored but used for debug, message so all the defined -DHAVE_..  -> "H" is passed on.
-# (15:13:56) rgareus: magnetophon: the solution on GNU/Linux is to use a GNU asbm.   -> man 1 as  "-D  Ignored."
-# (15:15:32) rgareus: magnetophon: alternatively try https://github.com/Ardour/ardour/blob/master/libs/ardour/wscript#L383  (remove the condition to use it only for windows)
 
 let
 
@@ -30,26 +17,26 @@ let
   # "git describe" when _not_ on an annotated tag(!): MAJOR.MINOR-REV-HASH.
 
   # Version to build.
-  tag = "6.0-unstable-2020-04-15";
+  tag = "5.12";
 
 in
 
 stdenv.mkDerivation rec {
-  name = "ardour6-${tag}";
+  name = "ardour-${tag}";
 
   src = fetchgit {
     url = "git://git.ardour.org/ardour/ardour.git";
-    rev = "9fac6139ea40ee2ba5af1415c302c61fee6a13aa";
-    sha256 = "0g5hbgr0wphc2x42vv2q6as4ngxc5q4h5gxgd3gblkcgipmybnhb";
+    rev = "ae0dcdc0c5d13483271065c360e378202d20170a";
+    sha256 = "0mla5lm51ryikc2rrk53max2m7a5ds6i1ai921l2h95wrha45nkr";
   };
 
   nativeBuildInputs = [ wafHook ];
   buildInputs =
     [ alsaLib aubio boost cairomm curl doxygen dbus fftw fftwSinglePrec flac
-      glibmm graphviz gtkmm2 libjack2 liblo readline webkit
+      glibmm graphviz gtkmm2 libjack2 libgnomecanvas libgnomecanvasmm liblo
       libogg librdf_raptor librdf_rasqal libsamplerate
       libsigcxx libsndfile libusb libuuid libxml2 libxslt lilv lrdf lv2
-      makeWrapper pango perl pkgconfig python rubberband serd sord
+      makeWrapper pango perl pkgconfig python2 rubberband serd sord
       sratom suil taglib vamp-plugin-sdk libarchive
     ];
 
@@ -57,10 +44,8 @@ stdenv.mkDerivation rec {
   # be available. Since this is an unzipped tarball fetched from github we
   # have to do that ourself.
   patchPhase = ''
-    printf '#include "libs/ardour/ardour/revision.h"\nnamespace ARDOUR { const char* revision = "6.0-pre1-212-g7434478a35"; const char* date = "2020-04-08"; }\n' > libs/ardour/revision.cc
-cat wscript | grep libintl
+    printf '#include "libs/ardour/ardour/revision.h"\nnamespace ARDOUR { const char* revision = \"${tag}-${builtins.substring 0 8 src.rev}\"; }\n' > libs/ardour/revision.cc
     sed 's|/usr/include/libintl.h|${glibc.dev}/include/libintl.h|' -i wscript
-cat wscript | grep libintl
     patchShebangs ./tools/
   '';
 
@@ -69,22 +54,17 @@ cat wscript | grep libintl
     "--docs"
     "--with-backends=jack,alsa,dummy"
   ];
-  # preConfigure = ''
-  # patchShebangs waf
-  # cat wscript
-  # ./waf configure
-  # '';
 
   postInstall = ''
     # Install desktop file
     mkdir -p "$out/share/applications"
     cat > "$out/share/applications/ardour.desktop" << EOF
     [Desktop Entry]
-    Name=Ardour 6
+    Name=Ardour 5
     GenericName=Digital Audio Workstation
     Comment=Multitrack harddisk recorder
-    Exec=$out/bin/ardour6
-    Icon=$out/share/ardour6/resources/Ardour-icon_256px.png
+    Exec=$out/bin/ardour5
+    Icon=$out/share/ardour5/resources/Ardour-icon_256px.png
     Terminal=false
     Type=Application
     X-MultipleArgs=false
@@ -101,7 +81,7 @@ cat wscript | grep libintl
       music and sound.
 
       Please consider supporting the ardour project financially:
-      https://community.ardour.org/node/8288
+      https://community.ardour.org/donate
     '';
     homepage = http://ardour.org/;
     license = licenses.gpl2;

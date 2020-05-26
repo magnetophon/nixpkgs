@@ -18602,11 +18602,11 @@ in
 
   aqemu = libsForQt5.callPackage ../applications/virtualization/aqemu { };
 
-  ardour = callPackage ../applications/audio/ardour {
+  ardour = callPackage ../applications/audio/ardour {};
+
+  ardour5 = callPackage ../applications/audio/ardour/ardour5.nix {
     inherit (gnome2) libgnomecanvas libgnomecanvasmm;
   };
-
-  ardour6 = callPackage ../applications/audio/ardour/ardour6.nix {};
 
   arelle = with python3Packages; toPythonApplication arelle;
 

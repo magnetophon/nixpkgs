@@ -1,9 +1,9 @@
 { stdenv, fetchgit, alsaLib, aubio, boost, cairomm, curl, doxygen
 , fftwSinglePrec, flac, glibc, glibmm, graphviz, gtkmm2, libjack2
-, libgnomecanvas, libgnomecanvasmm, liblo, libogg
+, liblo, libogg, readline, itstool
 , librdf_raptor, librdf_rasqal, libsamplerate, libsigcxx, libsndfile
 , libusb, libuuid, libxml2, libxslt, lilv, lrdf, lv2, makeWrapper
-, perl, pkgconfig, python2, rubberband, serd, sord, sratom
+, perl, pkgconfig, pulseaudio, python, rubberband, serd, sord, sratom
 , taglib, vamp-plugin-sdk, dbus, fftw, pango, suil, libarchive
 , wafHook }:
 
@@ -17,26 +17,28 @@ let
   # "git describe" when _not_ on an annotated tag(!): MAJOR.MINOR-REV-HASH.
 
   # Version to build.
-  tag = "5.12";
+  tag = "6.0";
 
 in
 
 stdenv.mkDerivation rec {
-  name = "ardour-${tag}";
+  name = "ardour6-${tag}";
 
   src = fetchgit {
     url = "git://git.ardour.org/ardour/ardour.git";
-    rev = "ae0dcdc0c5d13483271065c360e378202d20170a";
-    sha256 = "0mla5lm51ryikc2rrk53max2m7a5ds6i1ai921l2h95wrha45nkr";
+    rev = "360c81b815efe1e7b117ad6f96f8493f675d51bf";
+    sha256 = "162jd96zahl05fdmjwvpdfjxbhd6ifbav6xqa0vv6rsdl4zk395q";
   };
+
+  enableParallelBuilding = true;
 
   nativeBuildInputs = [ wafHook ];
   buildInputs =
     [ alsaLib aubio boost cairomm curl doxygen dbus fftw fftwSinglePrec flac
-      glibmm graphviz gtkmm2 libjack2 libgnomecanvas libgnomecanvasmm liblo
+      glibmm graphviz gtkmm2 libjack2 liblo readline itstool
       libogg librdf_raptor librdf_rasqal libsamplerate
       libsigcxx libsndfile libusb libuuid libxml2 libxslt lilv lrdf lv2
-      makeWrapper pango perl pkgconfig python2 rubberband serd sord
+      makeWrapper pango perl pkgconfig pulseaudio python rubberband serd sord
       sratom suil taglib vamp-plugin-sdk libarchive
     ];
 
@@ -44,15 +46,20 @@ stdenv.mkDerivation rec {
   # be available. Since this is an unzipped tarball fetched from github we
   # have to do that ourself.
   patchPhase = ''
-    printf '#include "libs/ardour/ardour/revision.h"\nnamespace ARDOUR { const char* revision = \"${tag}-${builtins.substring 0 8 src.rev}\"; }\n' > libs/ardour/revision.cc
+    printf '#include "libs/ardour/ardour/revision.h"\nnamespace ARDOUR { const char* revision = "6.0"; const char* date = "2020-05-23"; }\n' > libs/ardour/revision.cc
     sed 's|/usr/include/libintl.h|${glibc.dev}/include/libintl.h|' -i wscript
     patchShebangs ./tools/
-  '';
+    sed "382 s/mingw/x86_64/" -i libs/ardour/wscript
+    '';
 
   wafConfigureFlags = [
     "--optimize"
     "--docs"
-    "--with-backends=jack,alsa,dummy"
+    "--with-backends=jack,alsa,pulseaudio,dummy"
+    "--cxx11"
+    "--freedesktop"
+    "--ptformat"
+    "--no-phone-home"
   ];
 
   postInstall = ''
@@ -60,11 +67,11 @@ stdenv.mkDerivation rec {
     mkdir -p "$out/share/applications"
     cat > "$out/share/applications/ardour.desktop" << EOF
     [Desktop Entry]
-    Name=Ardour 5
+    Name=Ardour 6
     GenericName=Digital Audio Workstation
     Comment=Multitrack harddisk recorder
-    Exec=$out/bin/ardour5
-    Icon=$out/share/ardour5/resources/Ardour-icon_256px.png
+    Exec=$out/bin/ardour6
+    Icon=$out/share/ardour6/resources/Ardour-icon_256px.png
     Terminal=false
     Type=Application
     X-MultipleArgs=false
@@ -81,7 +88,7 @@ stdenv.mkDerivation rec {
       music and sound.
 
       Please consider supporting the ardour project financially:
-      https://community.ardour.org/node/8288
+      https://community.ardour.org/donate
     '';
     homepage = http://ardour.org/;
     license = licenses.gpl2;
