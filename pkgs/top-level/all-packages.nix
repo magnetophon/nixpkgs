@@ -3908,6 +3908,8 @@ in
 
   grin = callPackage ../tools/text/grin { };
 
+  gwc = callPackage ../applications/audio/gwc { };
+
   ripgrep = callPackage ../tools/text/ripgrep {
     inherit (darwin.apple_sdk.frameworks) Security;
   };
