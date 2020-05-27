@@ -19153,6 +19153,8 @@ in
 
   airwave = callPackage ../applications/audio/airwave { };
 
+  airwindows = callPackage ../applications/audio/airwindows { };
+
   akira-unstable = callPackage ../applications/graphics/akira { };
 
   alembic = callPackage ../development/libraries/alembic {};
