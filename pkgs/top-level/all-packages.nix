@@ -11065,6 +11065,8 @@ in
 
   uhd = callPackage ../applications/radio/uhd { };
 
+  uhhyou.lv2 = callPackage ../applications/audio/uhhyou.lv2 { };
+
   uisp = callPackage ../development/tools/misc/uisp { };
 
   uncrustify = callPackage ../development/tools/misc/uncrustify { };
