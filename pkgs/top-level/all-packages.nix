@@ -5270,6 +5270,10 @@ in
 
   molly-guard = callPackage ../os-specific/linux/molly-guard { };
 
+  molot-lite = callPackage ../applications/audio/molot-lite { };
+  molot-mono-lite = callPackage ../applications/audio/molot-lite/mono.nix { };
+  molot-stereo-lite = callPackage ../applications/audio/molot-lite/stereo.nix { };
+
   moneyplex = callPackage ../applications/office/moneyplex { };
 
   monit = callPackage ../tools/system/monit { };
