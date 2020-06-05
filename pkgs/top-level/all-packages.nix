@@ -14483,6 +14483,7 @@ in
   lilv = callPackage ../development/libraries/audio/lilv { };
 
   lv2 = callPackage ../development/libraries/audio/lv2 { };
+  lv2_1_16 = callPackage ../development/libraries/audio/lv2/1.16.nix { };
 
   lvtk = callPackage ../development/libraries/audio/lvtk { };
 
