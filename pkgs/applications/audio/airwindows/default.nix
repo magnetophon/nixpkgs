@@ -1,14 +1,18 @@
 { stdenv, fetchFromGitHub, requireFile, unzip, cmake }:
 
 stdenv.mkDerivation rec {
-  name = "airwindows-${version}";
-  version = "2020-05-25";
+  pname = "airwindows";
+  version = "unstable-2020-06-05";
 
+  # we use a fork of the main repo since upstream has a broken build system and hasn't merged any PR's since 2018
+  # https://github.com/airwindows/airwindows/pulls?q=is%3Apr+is%3Aclosed
+  # We track this branch:
+  # https://github.com/laserbat/airwindows/tree/new_build
   src = fetchFromGitHub {
-    owner = "airwindows";
-    repo = "airwindows";
-    rev = "897c0830e603a950e838a3753f89334bdf56bb71";
-    sha256 = "1mh7c176fdl5y5ixkgzj2j2b7qifp3lgnxmbn6b7bvg3sv5wsxg3";
+    owner = "laserbat";
+    repo = pname;
+    rev = "e766c1011631e4a8a75f1d5fd36605ba5f9e49b3";
+    sha256 = "0pp41jc83zwaw38mpazb6s4rpxx1wk7bfrn8pr0s9hm9xvz1f178";
   };
 
   vst-sdk = stdenv.mkDerivation rec {
@@ -20,42 +24,34 @@ stdenv.mkDerivation rec {
     };
     nativeBuildInputs = [ unzip ];
     installPhase = "cp -r . $out";
+    meta.license = stdenv.lib.licenses.unfree;
   };
 
-  airwindows-ports = stdenv.mkDerivation rec {
-    name = "airwindows-ports";
-    src = fetchFromGitHub {
-      owner = "ech2";
-      repo = "airwindows-ports";
-      rev = "0.4.0";
-      sha256 = "1ya4qbc63sb52nzisdapsydrnnpqnjsl5kgxibbr3dxf32474g89";
-    };
-    installPhase = "cp -r . $out";
-  };
 
   nativeBuildInputs = [ cmake ];
 
-  patchPhase = ''
-    cd plugins/LinuxVST
-    rm build/CMakeCache.txt
-    mkdir -p include/vstsdk
-    cp -r ${airwindows-ports}/include/vstsdk/CMakeLists.txt include/vstsdk/
-    cp -r ${vst-sdk}/pluginterfaces include/vstsdk/pluginterfaces
-    cp -r ${vst-sdk}/public.sdk/source/vst2.x/* include/vstsdk/
-    chmod -R 777 include/vstsdk/pluginterfaces
-  '';
+  postPatch = "cd plugins/LinuxVST";
 
-  installPhase = ''
-    for so_file in *.so; do
-      install -vDm 644 $so_file -t "$out/lib/lxvst"
-    done;
-  '';
+  # patchPhase = ''
+  #   cd plugins/LinuxVST
+  #   rm build/CMakeCache.txt
+  #   mkdir -p include/vstsdk
+  #   cp -r ${airwindows-ports}/include/vstsdk/CMakeLists.txt include/vstsdk/
+  #   cp -r ${vst-sdk}/pluginterfaces include/vstsdk/pluginterfaces
+  #   cp -r ${vst-sdk}/public.sdk/source/vst2.x/* include/vstsdk/
+  #   chmod -R 777 include/vstsdk/pluginterfaces
+  # '';
+
+  # installPhase = ''
+  #   for so_file in *.so; do
+  #     install -vDm 644 $so_file -t "$out/lib/lxvst"
+  #   done;
+  # '';
 
   meta = with stdenv.lib; {
     description = "Handsewn bespoke linuxvst plugins";
-    homepage = http://www.airwindows.com/airwindows-linux/;
-    # airwindows is mit, but the vst sdk is unfree
-    license = licenses.unfree;
+    homepage = "http://www.airwindows.com/airwindows-linux/";
+    license = licenses.mit;
     platforms = platforms.linux;
     maintainers = [ maintainers.magnetophon ];
   };
