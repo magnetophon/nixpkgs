@@ -18866,6 +18866,8 @@ in
 
   bs1770gain = callPackage ../applications/audio/bs1770gain { };
 
+  bharvestr = callPackage ../applications/audio/bharvestr  { };
+
   bjumblr = callPackage ../applications/audio/bjumblr { };
 
   bsequencer = callPackage ../applications/audio/bsequencer { };
