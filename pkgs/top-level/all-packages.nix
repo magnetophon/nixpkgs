@@ -25556,6 +25556,8 @@ in
 
   faustlive = callPackage ../applications/audio/faust/faustlive.nix { };
 
+  faustpp = python3Packages.callPackage  ../applications/audio/faust/faustpp.nix { };
+
   fceux = callPackage ../misc/emulators/fceux { };
 
   flockit = callPackage ../tools/backup/flockit { };
