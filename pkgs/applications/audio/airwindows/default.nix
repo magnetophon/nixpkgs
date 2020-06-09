@@ -11,8 +11,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "laserbat";
     repo = pname;
-    rev = "e766c1011631e4a8a75f1d5fd36605ba5f9e49b3";
-    sha256 = "0pp41jc83zwaw38mpazb6s4rpxx1wk7bfrn8pr0s9hm9xvz1f178";
+    rev = "d480ce3a0f849e5dbf06e28f93e148f8bf3e23a5";
+    sha256 = "0yixazwl5c1fj4rj2k89brvp7fr2n6q52kmiql4cnsh6n9vjjdp4";
   };
 
   vst-sdk = stdenv.mkDerivation rec {
@@ -30,7 +30,14 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ cmake ];
 
-  postPatch = "cd plugins/LinuxVST";
+  postPatch = ''
+    cd plugins/LinuxVST
+    mkdir -p include/vstsdk
+    cp ${vst-sdk}/public.sdk/source/vst2.x/* ./include/vstsdk/
+    cp -r ${vst-sdk}/pluginterfaces ./include/vstsdk/pluginterfaces
+    chmod -R 777 include/vstsdk/pluginterfaces
+ls
+  '';
 
   # patchPhase = ''
   #   cd plugins/LinuxVST
