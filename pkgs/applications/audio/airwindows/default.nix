@@ -16,11 +16,11 @@ stdenv.mkDerivation rec {
   };
 
   vst-sdk = stdenv.mkDerivation rec {
-    name = "vstsdk366_27_06_2016_build_61";
+    name = "vst_sdk2_4_rev2";
     src = requireFile {
       name = "${name}.zip";
-      url = "https://www.steinberg.net/sdk_downloads/vstsdk366_27_06_2016_build_61.zip";
-      sha256 = "05gsr13bpi2hhp34rvhllsvmn44rqvmjdpg9fsgfzgylfkz0kiki";
+      url = "https://archive.org/download/VST2SDK/vst_sdk2_4_rev2.zip";
+      sha256 = "0d4p9f52wh0af9c15g2kyj217ixqyl0m27zigqv064npk34q2p3r";
     };
     nativeBuildInputs = [ unzip ];
     installPhase = "cp -r . $out";
@@ -32,13 +32,23 @@ stdenv.mkDerivation rec {
 
   postPatch = ''
     cd plugins/LinuxVST
-    mkdir -p include/vstsdk
-    cp ${vst-sdk}/public.sdk/source/vst2.x/* ./include/vstsdk/
-    cp -r ${vst-sdk}/pluginterfaces ./include/vstsdk/pluginterfaces
-    chmod -R 777 include/vstsdk/pluginterfaces
-ls
+    # mkdir -p vstsdk
+    # cp ${vst-sdk}/public.sdk/source/vst2.x/* ./vstsdk/
+    # cp -r ${vst-sdk}/pluginterfaces ./vstsdk/pluginterfaces
+    # chmod -R 777 vstsdk/pluginterfaces
+  mkdir -p include/vstsdk
+  cp ${vst-sdk}/public.sdk/source/vst2.x/* ./include/vstsdk/
+  cp -r ${vst-sdk}/pluginterfaces ./include/vstsdk/pluginterfaces
+  chmod -R 777 include/vstsdk/pluginterfaces
+echo ls88888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+ls include/vstsdk
   '';
 
+  # mkdir -p include/vstsdk
+  # cp ${vst-sdk}/public.sdk/source/vst2.x/* ./include/vstsdk/
+  # cp -r ${vst-sdk}/pluginterfaces ./include/vstsdk/pluginterfaces
+  # chmod -R 777 include/vstsdk/pluginterfaces
+  #
   # patchPhase = ''
   #   cd plugins/LinuxVST
   #   rm build/CMakeCache.txt
