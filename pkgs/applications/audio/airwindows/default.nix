@@ -2,7 +2,7 @@
 
 stdenv.mkDerivation rec {
   pname = "airwindows";
-  version = "unstable-2020-06-05";
+  version = "unstable-2020-06-10";
 
   # we use a fork of the main repo since upstream has a broken build system and hasn't merged any PR's since 2018
   # https://github.com/airwindows/airwindows/pulls?q=is%3Apr+is%3Aclosed
@@ -11,8 +11,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "laserbat";
     repo = pname;
-    rev = "d480ce3a0f849e5dbf06e28f93e148f8bf3e23a5";
-    sha256 = "0yixazwl5c1fj4rj2k89brvp7fr2n6q52kmiql4cnsh6n9vjjdp4";
+    rev = "efa467d44b0c8f9b6aeb228e8c9770c8b82842b4";
+    sha256 = "1s390d91rm38lwyxkv5q1vl8dpa1fc8sj9vblv274rwxrr5h6s0x";
   };
 
   vst-sdk = stdenv.mkDerivation rec {
@@ -32,38 +32,16 @@ stdenv.mkDerivation rec {
 
   postPatch = ''
     cd plugins/LinuxVST
-    # mkdir -p vstsdk
-    # cp ${vst-sdk}/public.sdk/source/vst2.x/* ./vstsdk/
-    # cp -r ${vst-sdk}/pluginterfaces ./vstsdk/pluginterfaces
-    # chmod -R 777 vstsdk/pluginterfaces
-  mkdir -p include/vstsdk
-  cp ${vst-sdk}/public.sdk/source/vst2.x/* ./include/vstsdk/
-  cp -r ${vst-sdk}/pluginterfaces ./include/vstsdk/pluginterfaces
-  chmod -R 777 include/vstsdk/pluginterfaces
-echo ls88888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
-ls include/vstsdk
+    mkdir -p vstsdk
+    cp ${vst-sdk}/public.sdk/source/vst2.x/* ./vstsdk/
+    cp -r ${vst-sdk}/pluginterfaces ./vstsdk/pluginterfaces
   '';
 
-  # mkdir -p include/vstsdk
-  # cp ${vst-sdk}/public.sdk/source/vst2.x/* ./include/vstsdk/
-  # cp -r ${vst-sdk}/pluginterfaces ./include/vstsdk/pluginterfaces
-  # chmod -R 777 include/vstsdk/pluginterfaces
-  #
-  # patchPhase = ''
-  #   cd plugins/LinuxVST
-  #   rm build/CMakeCache.txt
-  #   mkdir -p include/vstsdk
-  #   cp -r ${airwindows-ports}/include/vstsdk/CMakeLists.txt include/vstsdk/
-  #   cp -r ${vst-sdk}/pluginterfaces include/vstsdk/pluginterfaces
-  #   cp -r ${vst-sdk}/public.sdk/source/vst2.x/* include/vstsdk/
-  #   chmod -R 777 include/vstsdk/pluginterfaces
-  # '';
-
-  # installPhase = ''
-  #   for so_file in *.so; do
-  #     install -vDm 644 $so_file -t "$out/lib/lxvst"
-  #   done;
-  # '';
+  installPhase = ''
+    for so_file in *.so; do
+      install -vDm 644 $so_file -t "$out/lib/lxvst"
+    done;
+  '';
 
   meta = with stdenv.lib; {
     description = "Handsewn bespoke linuxvst plugins";
