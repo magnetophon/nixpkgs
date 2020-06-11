@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, fetchpatch, pkgconfig, makeWrapper
+{ stdenv, fetchFromGitHub, pkgconfig, makeWrapper
 , libsndfile, jack2Full
 , libGLU, libGL, lv2, cairo
 , ladspaH, php }:
@@ -13,16 +13,6 @@ stdenv.mkDerivation rec {
     rev = "${pname}-${version}";
     sha256 = "0s0i0kf5nqxxywckg03fds1w7696ly60rnlljzqvp7qfgzps1r6c";
   };
-
-  patches = [
-    # Fix build
-    # https://github.com/sadko4u/lsp-plugins/issues/104
-    (fetchpatch {
-      url = "https://github.com/sadko4u/lsp-plugins/commit/4d901135fb82fa95e668b4d55d05e405f5e620d2.patch";
-      excludes = [ "TODO.txt" ];
-      sha256 = "wR2B6XnDXT2BGwmrsL72PH/BM1e9d9JvqHxDtfFDAug=";
-    })
-  ];
 
   nativeBuildInputs = [ pkgconfig php makeWrapper ];
   buildInputs = [ jack2Full libsndfile libGLU libGL lv2 cairo ladspaH ];
