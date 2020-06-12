@@ -2,13 +2,13 @@
 
 stdenv.mkDerivation rec {
   pname = "BJumblr";
-  version = "0.2";
+  version = "1.2.2";
 
   src = fetchFromGitHub {
     owner = "sjaehn";
     repo = pname;
-    rev = "v${version}";
-    sha256 = "14z8113zkwykbhm1a8h2xs972dgifvlfij92b08jckyc7cbz84ys";
+    rev = version;
+    sha256 = "17h8zx6yqy0vyykik01iidqn0z736yc3244j75711gr07ab55i3d";
   };
 
   nativeBuildInputs = [ pkgconfig ];
