@@ -2,13 +2,13 @@
 
 stdenv.mkDerivation rec {
   pname = "BSchaffl";
-  version = "0.1";
+  version = "0.2";
 
   src = fetchFromGitHub {
     owner = "sjaehn";
     repo = pname;
     rev = version;
-    sha256 = "0rbn7k7rkn610hsv2mcq41qgrp1dgl0nhg6q6sy9zqcqrk59pd77";
+    sha256 = "1q6x9aml6dbbxddh06d5xvzbdvkcz7dkwv14a81rc91niwl0c07r";
   };
 
   nativeBuildInputs = [ pkgconfig ];
