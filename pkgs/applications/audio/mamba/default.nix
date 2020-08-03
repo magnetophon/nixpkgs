@@ -17,9 +17,6 @@ stdenv.mkDerivation rec {
     xorg.libX11 xorg.libpthreadstubs cairo libjack2 pcre libXdmcp libsigcxx liblo
   ];
 
-  # error: format not a string literal and no format arguments [-Werror=format-security]
-  # hardeningDisable = [ "format" ];
-
   makeFlags = [ "PREFIX=$(out)" ];
 
   meta = with stdenv.lib; {
