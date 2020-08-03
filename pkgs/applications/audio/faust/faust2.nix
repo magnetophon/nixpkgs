@@ -21,13 +21,13 @@ with stdenv.lib.strings;
 
 let
 
-  version = "2.27.1";
+  version = "unstable-2020-08-03";
 
   src = fetchFromGitHub {
     owner = "grame-cncm";
     repo = "faust";
-    rev = version;
-    sha256 = "18qqpcrnw33xsbm1lyxzbwl9fj4jg4756mmk67gdhh8wzxq8n8mm";
+    rev = "b6045f4592384076d3b383d116e602a95a000eb3";
+    sha256 = "1wcpilwnkc7rrbv9gbkj5hb7kamkh8nrc3r4hbcvbz5ar2pfc6d5";
     fetchSubmodules = true;
   };
 
