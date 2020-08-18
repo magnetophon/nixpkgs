@@ -2975,6 +2975,8 @@ in
 
   dev86 = callPackage ../development/compilers/dev86 { };
 
+  digidrie = callPackage ../applications/audio/digidrie { };
+
   diskrsync = callPackage ../tools/backup/diskrsync { };
 
   djbdns = callPackage ../tools/networking/djbdns { };
