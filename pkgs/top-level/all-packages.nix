@@ -19820,6 +19820,8 @@ in
 
   carla = libsForQt514.callPackage ../applications/audio/carla { };
 
+  catia = libsForQt514.callPackage ../applications/audio/catia { };
+
   castor = callPackage ../applications/networking/browsers/castor { };
 
   catimg = callPackage ../tools/misc/catimg { };
