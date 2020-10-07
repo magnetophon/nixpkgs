@@ -28,13 +28,16 @@ let
 in
 rustPlatform.buildRustPackage rec {
   pname = "hunter";
-  version = "1.3.5";
+  # version = "1.3.5";
+  version = "unstable-2020-05-25";
 
   src = fetchFromGitHub {
     owner = "rabite0";
     repo = "hunter";
-    rev = "v${version}";
-    sha256 = "0z28ymz0kr726zjsrksipy7jz7y1kmqlxigyqkh3pyh154b38cis";
+    # rev = "v${version}";
+    # sha256 = "0z28ymz0kr726zjsrksipy7jz7y1kmqlxigyqkh3pyh154b38cis";
+    rev = "355d9a3101f6d8dc375807de79e368602f1cb87d";
+    sha256 = "0d6gdzc5cc235zvk1zw3m7kgaq78raqpjrcpvbbzw50vdy80sv27";
   };
 
   RUSTC_BOOTSTRAP=1;
@@ -54,7 +57,8 @@ rustPlatform.buildRustPackage rec {
     wrapProgram $out/bin/hunter --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "$GST_PLUGIN_SYSTEM_PATH_1_0"
   '';
 
-  cargoSha256 = "18ycj1f310s74gkjz2hh4dqzjb3bnxm683968l1cbxs7gq20jzx6";
+  # cargoSha256 = "18ycj1f310s74gkjz2hh4dqzjb3bnxm683968l1cbxs7gq20jzx6";
+  cargoSha256 = "1fq66rxsqg8q0q16myr2c8pv0xakxjm177zig5kza1yvpggrn67d";
 
   meta = with stdenv.lib; {
     description = "The fastest file manager in the galaxy!";
