@@ -7403,6 +7403,8 @@ in
 
   tio = callPackage ../tools/misc/tio { };
 
+  tiv = callPackage ../applications/misc/tiv { };
+
   tldr = callPackage ../tools/misc/tldr { };
 
   tldr-hs = haskellPackages.tldr;
