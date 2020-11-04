@@ -22039,6 +22039,8 @@ in
 
   meli = callPackage ../applications/networking/mailreaders/meli { };
 
+  melmatcheq.lv2 = callPackage ../applications/audio/melmatcheq.lv2 { };
+
   melonDS = callPackage ../misc/emulators/melonDS { };
 
   meme = callPackage ../applications/graphics/meme { };
