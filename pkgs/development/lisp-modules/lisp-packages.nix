@@ -124,9 +124,9 @@ let lispPackages = rec {
   };
   nyxt = pkgs.lispPackages.buildLispPackage rec {
     baseName = "nyxt";
-    version = "2020-10-23";
+    version = "2-pre-release-4";
 
-    buildSystems = [ "nyxt" "nyxt-ext" ];
+    buildSystems = [ "nyxt" ];
 
     description = "Browser";
 
@@ -187,14 +187,14 @@ let lispPackages = rec {
     src = pkgs.fetchFromGitHub {
       owner = "atlas-engineer";
       repo = "nyxt";
-      rev = "f744af5233b3636460ce71650de2b0c7dcb9fa8e";
-      sha256 = "1m4jic7nbm2jmxlm8k0zqg62z91g2f2s86by086brgfw056idjmz";
+      rev = version;
+      sha256 = "00865plmvgl1nj009a4w9bcb5mf0zgqjx7w6slacyqgidjzad6qm";
       # date = 2020-10-23T19:06:04+02:00;
     };
 
     packageName = "nyxt";
 
-    asdFilesToKeep = [ "nyxt.asd" "nyxt-ext.asd" ];
+    asdFilesToKeep = [ "nyxt.asd" ];
 
     propagatedBuildInputs = [
       pkgs.libressl.out
