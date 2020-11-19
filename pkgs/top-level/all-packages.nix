@@ -25238,8 +25238,19 @@ in
 
   zscroll = callPackage ../applications/misc/zscroll {};
 
-  zynaddsubfx = callPackage ../applications/audio/zynaddsubfx { };
+  zynaddsubfx = zyn-fusion;
 
+  zynaddsubfx-fltk = callPackage ../applications/audio/zynaddsubfx {
+    guiModule = "fltk";
+  };
+
+  zynaddsubfx-ntk = callPackage ../applications/audio/zynaddsubfx {
+    guiModule = "ntk";
+  };
+
+  zyn-fusion = callPackage ../applications/audio/zynaddsubfx {
+    guiModule = "zest";
+  };
   ### BLOCKCHAINS / CRYPTOCURRENCIES / WALLETS
 
   aeon = callPackage ../applications/blockchains/aeon { };
