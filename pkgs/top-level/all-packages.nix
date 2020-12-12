@@ -12015,6 +12015,19 @@ in
 
   schemaspy = callPackage ../development/tools/database/schemaspy { };
 
+  eteroj = callPackage ../applications/audio/open-music-kontrollers/eteroj.nix { };
+  jit = callPackage ../applications/audio/open-music-kontrollers/jit.nix { };
+  mephisto= callPackage ../applications/audio/open-music-kontrollers/mephisto.nix { };
+  midi_matrix = callPackage ../applications/audio/open-music-kontrollers/midi_matrix.nix { };
+  moony = callPackage ../applications/audio/open-music-kontrollers/moony.nix { };
+  orbit = callPackage ../applications/audio/open-music-kontrollers/orbit.nix { };
+  patchmatrix = callPackage ../applications/audio/open-music-kontrollers/patchmatrix.nix { };
+  router = callPackage ../applications/audio/open-music-kontrollers/router.nix { };
+  sherlock= callPackage ../applications/audio/open-music-kontrollers/sherlock.nix { };
+  synthpod = callPackage ../applications/audio/open-music-kontrollers/synthpod.nix { };
+  vm = callPackage ../applications/audio/open-music-kontrollers/vm.nix { };
+  lv2lint = callPackage ../applications/audio/lv2lint/default.nix { };
+
   shncpd = callPackage ../tools/networking/shncpd { };
 
   sigrok-cli = callPackage ../development/tools/sigrok-cli { };
@@ -21060,8 +21073,6 @@ in
   espeakedit = callPackage ../applications/audio/espeak/edit.nix { };
 
   esniper = callPackage ../applications/networking/esniper { };
-
-  eteroj.lv2 = libsForQt5.callPackage ../applications/audio/eteroj.lv2 { };
 
   etesync-dav = callPackage ../applications/misc/etesync-dav {};
 
