@@ -7825,6 +7825,8 @@ in
 
   tty-clock = callPackage ../tools/misc/tty-clock { };
 
+  ttymidi = callPackage ../applications/audio/ttymidi { };
+
   ttyplot = callPackage ../tools/misc/ttyplot { };
 
   ttyrec = callPackage ../tools/misc/ttyrec { };
