@@ -1,28 +1,48 @@
 { stdenv, fetchFromGitHub, cmake, git, pkg-config, python3
 , cairo, libsndfile, libxcb, libxkbcommon, xcbutil, xcbutilcursor, xcbutilkeysyms, zenity
+, curl
 }:
 
 stdenv.mkDerivation rec {
   pname = "surge";
-  version = "1.7.1";
+  #
+  # version = "unstable-2020-12-23";
+  # rev = "42c50f83d885bbe719df5999063cd12d13b6e97f";
+  # sha256 = "07y0ni701ia6zn34aaj8wbzdz4s3qzxvb0p83mjs86xq3lyfm1kw";
+  #
+  # version = "1.7.1";
+  # rev = "release_${version}";
+  # sha256 = "1b3ccc78vrpzy18w7070zfa250dnd1bww147xxcnj457vd6n065s";
+  #
+  #https://github.com/surge-synthesizer/surge/commit/b97c6842bacf8375b7d981b7639710294bd331a4
+  #
+  #
+  # for ardour song digita||atino
+  # version = "unstable-2020-12-17";
+  # rev = "dbdad6c927c1912cb0ee1d31cd593fcdc52ff8b1";
+  # sha256 = "0a39m6mmnyhy30a7srghqmk9ndkacs9haxmn4y52ab4sb3qj09k3";
 
+  version = "unstable-2020-12-27";
+  # version = "unstable-2020-12-17";
   src = fetchFromGitHub {
     owner = "surge-synthesizer";
     repo = pname;
-    rev = "release_${version}";
-    sha256 = "1b3ccc78vrpzy18w7070zfa250dnd1bww147xxcnj457vd6n065s";
+    # rev = "dbdad6c927c1912cb0ee1d31cd593fcdc52ff8b1";
+    # sha256 = "0a39m6mmnyhy30a7srghqmk9ndkacs9haxmn4y52ab4sb3qj09k3";
+    rev = "7d588a0fedcaebdc7ffc569610210b6e68716213";
+    sha256 = "0w0934d18mq82qb78978q6z0d7cvamb3k5y7a2dmjf408cn2ygfh";
     leaveDotGit = true; # for SURGE_VERSION
     fetchSubmodules = true;
   };
 
   nativeBuildInputs = [ cmake git pkg-config python3 ];
-  buildInputs = [ cairo libsndfile libxcb libxkbcommon xcbutil xcbutilcursor xcbutilkeysyms zenity ];
+  buildInputs = [ cairo libsndfile libxcb libxkbcommon xcbutil xcbutilcursor xcbutilkeysyms zenity curl ];
 
   postPatch = ''
     substituteInPlace src/common/SurgeStorage.cpp --replace "/usr/share/Surge" "$out/share/surge"
-    substituteInPlace src/common/gui/PopupEditorDialog.cpp --replace '"zenity' '"${zenity}/bin/zenity'
-    substituteInPlace src/linux/UserInteractionsLinux.cpp --replace '"zenity' '"${zenity}/bin/zenity'
-    substituteInPlace vstgui.surge/vstgui/lib/platform/linux/x11fileselector.cpp --replace /usr/bin/zenity ${zenity}/bin/zenity
+    # substituteInPlace src/common/gui/PopupEditorDialog.cpp --replace '"zenity' '"${zenity}/bin/zenity'
+    # substituteInPlace src/linux/UserInteractionsLinux.cpp --replace '"zenity' '"${zenity}/bin/zenity'
+    # substituteInPlace vstgui.surge/vstgui/lib/platform/linux/x11fileselector.cpp --replace /usr/bin/zenity ${zenity}/bin/zenity
   '';
 
   installPhase = ''
@@ -35,6 +55,7 @@ stdenv.mkDerivation rec {
   doInstallCheck = true;
   installCheckPhase = ''
     cd ..
+    export HOME=$(mktemp -d)
     build/surge-headless
   '';
 
