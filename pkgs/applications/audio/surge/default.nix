@@ -22,15 +22,15 @@ stdenv.mkDerivation rec {
   # rev = "dbdad6c927c1912cb0ee1d31cd593fcdc52ff8b1";
   # sha256 = "0a39m6mmnyhy30a7srghqmk9ndkacs9haxmn4y52ab4sb3qj09k3";
 
-  version = "unstable-2020-12-27";
+  version = "unstable-2020-12-29";
   # version = "unstable-2020-12-17";
   src = fetchFromGitHub {
     owner = "surge-synthesizer";
     repo = pname;
     # rev = "dbdad6c927c1912cb0ee1d31cd593fcdc52ff8b1";
     # sha256 = "0a39m6mmnyhy30a7srghqmk9ndkacs9haxmn4y52ab4sb3qj09k3";
-    rev = "7d588a0fedcaebdc7ffc569610210b6e68716213";
-    sha256 = "0w0934d18mq82qb78978q6z0d7cvamb3k5y7a2dmjf408cn2ygfh";
+    rev = "c70d689d55697f3cd5a40f8315c810bffd73ef12";
+    sha256 = "02s6jfwc481wc1kqhjvgagzp07gl9sx1lc0xgrj0g6iggy25k6pg";
     leaveDotGit = true; # for SURGE_VERSION
     fetchSubmodules = true;
   };
@@ -56,6 +56,7 @@ stdenv.mkDerivation rec {
   installCheckPhase = ''
     cd ..
     export HOME=$(mktemp -d)
+    export SURGE_DISABLE_NETWORK_TESTS=TRUE
     build/surge-headless
   '';
 
