@@ -2,13 +2,13 @@
 
 stdenv.mkDerivation rec {
   pname = "ganv";
-  version = "unstable-2019-12-30";
+  version = "1.8.0";
 
   src = fetchgit {
     url = "https://gitlab.com/drobilla/${pname}.git";
     fetchSubmodules = true;
-    rev = "90bd022f8909f92cc5290fdcfc76c626749e1186";
-    sha256 = "01znnalirbqxpz62fbw2c14c8xn117jc92xv6dhb3hln92k9x37f";
+    rev = version;
+    sha256 = "01zrnalirbqxpz62fbw2c14c8xn117jc92xv6dhb3hln92k9x37f";
   };
 
   nativeBuildInputs = [ pkgconfig wafHook ];
