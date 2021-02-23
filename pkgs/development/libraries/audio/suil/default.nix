@@ -1,7 +1,7 @@
 { stdenv, lib, fetchurl, gtk2, lv2, pkgconfig, python, serd, sord, sratom
 , wafHook
-, withQt4 ? true, qt4 ? null
-, withQt5 ? false, qt5 ? null }:
+, withQt4 ? false, qt4 ? null
+, withQt5 ? true, qt5 ? null }:
 
 # I haven't found an XOR operator in nix...
 assert withQt4 || withQt5;
@@ -9,12 +9,12 @@ assert !(withQt4 && withQt5);
 
 stdenv.mkDerivation rec {
   pname = "suil";
-  version = "0.10.6";
+  version = "0.10.10";
   name = "${pname}-qt${if withQt4 then "4" else "5"}-${version}";
 
   src = fetchurl {
     url = "https://download.drobilla.net/${pname}-${version}.tar.bz2";
-    sha256 = "0z4v01pjw4wh65x38w6icn28wdwxz13ayl8hvn4p1g9kmamp1z06";
+    sha256 = "1ysbazqlbyxlzyr9zk7dj2mgb6pn0amllj2cd5g1m56wnzk0h3vm";
   };
 
   nativeBuildInputs = [ pkgconfig wafHook ];
