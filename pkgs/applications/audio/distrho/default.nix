@@ -14,25 +14,25 @@
 
 stdenv.mkDerivation rec {
   pname = "distrho-ports";
-  version = "2020-07-14";
+  version = "2021-01-15";
 
   src = fetchFromGitHub {
     owner = "DISTRHO";
     repo = "DISTRHO-Ports";
-    rev = version;
-    sha256 = "03ji41i6dpknws1vjwfxnl8c8bgisv2ng8xa4vqy2473k7wgdw4v";
+    rev = "a420f376b8f4891b421b058e7dc971243a54e264";
+    sha256 = "1zliq9ppjnvji74yg7hwkz9zxf9gjhd8002cqav23azd644k5ikd";
   };
 
   nativeBuildInputs = [ pkg-config meson ninja ];
 
   buildInputs = [
-    alsaLib
-    freetype
-    libGL
-    libX11
-    libXcursor
-    libXext
-    libXrender
+      alsaLib
+      freetype
+      libGL
+      libX11
+      libXcursor
+      libXext
+      libXrender
   ];
 
   meta = with stdenv.lib; {
