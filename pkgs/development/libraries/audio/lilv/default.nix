@@ -2,14 +2,12 @@
 
 stdenv.mkDerivation rec {
   pname = "lilv";
-  version = "0.24.10";
+  version = "0.24.12";
 
   src = fetchurl {
     url = "https://download.drobilla.net/${pname}-${version}.tar.bz2";
-    sha256 = "1565zy0yz46cf2f25pi46msdnzkj6bbhml9gfigdpjnsdlyskfyi";
+    sha256 = "0qchfsyrsrp2pdpd59025kllycr04ddpzd03ha1iz70ci687g8r6";
   };
-
-  patches = [ ./lilv-pkgconfig.patch ];
 
   nativeBuildInputs = [ pkgconfig python3 wafHook ];
   buildInputs = [ serd sord sratom ];
