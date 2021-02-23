@@ -2,11 +2,11 @@
 
 stdenv.mkDerivation rec {
   pname = "sratom";
-  version = "0.6.4";
+  version = "0.6.8";
 
   src = fetchurl {
     url = "https://download.drobilla.net/${pname}-${version}.tar.bz2";
-    sha256 = "0vh0biy3ngpzzgdml309c2mqz8xq9q0hlblczb4c6alhp0a8yv0l";
+    sha256 = "1pq25l6pmfqmg30yp8c47zr72v6dif0y1qmdrpxbg8n5mnqk5jrs";
   };
 
   nativeBuildInputs = [ pkgconfig wafHook python3 ];
