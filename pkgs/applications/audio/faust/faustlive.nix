@@ -5,12 +5,12 @@
 
 stdenv.mkDerivation rec {
   pname = "faustlive";
-  version = "2.5.4";
+  version = "2.5.5";
   src = fetchFromGitHub {
     owner = "grame-cncm";
     repo = "faustlive";
     rev = version;
-    sha256 = "0npn8fvq8iafyamq4wrj1k1bmk4xd0my2sp3gi5jdjfx6hc1sm3n";
+    sha256 = "0qbn05nq170ckycwalkk5fppklc4g457mapr7p7ryrhc1hwzffm9";
     fetchSubmodules = true;
   };
 
