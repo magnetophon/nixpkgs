@@ -21498,6 +21498,8 @@ in
 
   cadence = libsForQt5.callPackage ../applications/audio/cadence { };
 
+  CHOWTapeModel  = callPackage ../applications/audio/CHOWTapeModel { };
+
   cheesecutter = callPackage ../applications/audio/cheesecutter { };
 
   milkytracker = callPackage ../applications/audio/milkytracker { };
