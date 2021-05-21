@@ -5,30 +5,21 @@
 
 stdenv.mkDerivation rec {
   pname = "surge";
-  # version = "1.8.1";
-  version = "unstable-2021-04-08";
+  version = "1.9.0";
 
-  # src = fetchurl {
-  # url = "https://github.com/surge-synthesizer/releases/releases/download/${version}/SurgeSrc_${version}.tgz";
-  # sha256 = "1nakblkrig10816ixmhlb6wcfj1ki1wx7k68qnanbpdw0wmwy7y2";
-  # };
-
-  src = fetchFromGitHub {
-    owner = "surge-synthesizer";
-    repo = "surge";
-    rev = "d20cbe49e25906dd9de33da1c1e0ec8aa6635623";
-    sha256 = "1wgymjfvj3shhvhx139hlrihmmnnd0cn6im6arz18d5jsy539dlz";
-    leaveDotGit = true;
-    fetchSubmodules = true;
+  src = fetchurl {
+    url = "https://github.com/surge-synthesizer/releases/releases/download/${version}/SurgeSrc_${version}.tgz";
+    sha256 = "00af4lfcipl0rn0dn4gfipx7nbk8ym1mrmji8v0ar98frsrpxg4k";
   };
 
   extraContent = fetchFromGitHub {
     owner = "surge-synthesizer";
     repo = "surge-extra-content";
     # rev from: https://github.com/surge-synthesizer/surge/blob/release_1.8.1/cmake/stage-extra-content.cmake#L6
+    # or: https://github.com/surge-synthesizer/surge/blob/main/cmake/stage-extra-content.cmake
     # SURGE_EXTRA_CONTENT_HASH
-    rev = "a4265856ae98f34a5b4e38ce8f36d29b646f56ec";
-    sha256 = "119b55h7prw3id5fnpgc3zpildddnr7r48glzczcp65v7qawxi4y";
+    rev = "afc591cc06d9adc3dc8dc515a55c66873fa10296";
+    sha256 = "1wqv86l70nwlrb10n47rib80f47a96j9qqg8w5dv46ys1sq2nz7z";
   };
   nativeBuildInputs = [ cmake git pkg-config python3 ];
   buildInputs = [ cairo libsndfile libxcb libxkbcommon xcbutil xcbutilcursor xcbutilkeysyms zenity curl rsync ];
