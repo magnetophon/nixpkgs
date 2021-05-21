@@ -1238,6 +1238,8 @@ in
 
   detect-secrets = python3Packages.callPackage ../development/tools/detect-secrets { };
 
+  diopser = callPackage ../applications/audio/diopser { };
+
   diskonaut = callPackage ../tools/misc/diskonaut { };
 
   diskus = callPackage ../tools/misc/diskus {
