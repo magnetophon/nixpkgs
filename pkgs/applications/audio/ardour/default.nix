@@ -1,4 +1,3 @@
-
 { stdenv
 , fetchgit
 , alsaLib
@@ -9,7 +8,7 @@
 , curl
 , dbus
 , doxygen
-, ffmpeg_3
+, ffmpeg
 , fftw
 , fftwSinglePrec
 , flac
@@ -53,14 +52,13 @@
 }:
 stdenv.mkDerivation rec {
   pname = "ardour";
-  version = "unstable-2021-04-08";
+  version = "6.7";
 
   # don't fetch releases from the GitHub mirror, they are broken
   src = fetchgit {
     url = "git://git.ardour.org/ardour/ardour.git";
-    rev = "5e01275d0e1c652506f784d230e6c2f738e149c6";
-    sha256 = "1j6vw6x6jjjgrdxqdmnrccym947kb7aj1xnp0a4b39cycmssz7pd";
-    fetchSubmodules = true;
+    rev = version;
+    sha256 = "19jc29fjwgvqbg3gnmy50mrz8mh5x4nwddglasvwx83nc87qwllx";
   };
 
   patches = [
@@ -86,7 +84,7 @@ stdenv.mkDerivation rec {
     cppunit
     curl
     dbus
-    ffmpeg_3
+    ffmpeg
     fftw
     fftwSinglePrec
     flac
@@ -148,16 +146,16 @@ stdenv.mkDerivation rec {
   sed 's|/usr/include/libintl.h|${glibc.dev}/include/libintl.h|' -i wscript
   patchShebangs ./tools/
   substituteInPlace libs/ardour/video_tools_paths.cc \
-  --replace 'ffmpeg_exe = X_("");' 'ffmpeg_exe = X_("${ffmpeg_3}/bin/ffmpeg");' \
-  --replace 'ffprobe_exe = X_("");' 'ffprobe_exe = X_("${ffmpeg_3}/bin/ffprobe");'
+  --replace 'ffmpeg_exe = X_("");' 'ffmpeg_exe = X_("${ffmpeg}/bin/ffmpeg");' \
+  --replace 'ffprobe_exe = X_("");' 'ffprobe_exe = X_("${ffmpeg}/bin/ffprobe");'
   '';
 
   postInstall = ''
     # wscript does not install these for some reason
     install -vDm 644 "build/gtk2_ardour/ardour.xml" \
       -t "$out/share/mime/packages"
-    # install -vDm 644 "build/gtk2_ardour/ardour6.desktop" \
-      # -t "$out/share/applications"
+    install -vDm 644 "build/gtk2_ardour/ardour6.desktop" \
+      -t "$out/share/applications"
     for size in 16 22 32 48 256 512; do
       install -vDm 644 "gtk2_ardour/resources/Ardour-icon_''${size}px.png" \
         "$out/share/icons/hicolor/''${size}x''${size}/apps/ardour6.png"
