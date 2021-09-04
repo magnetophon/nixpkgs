@@ -27599,6 +27599,8 @@ with pkgs;
     git = gitMinimal;
   };
 
+  surge-XT = callPackage ../applications/audio/surge-XT { };
+
   survex = callPackage ../applications/misc/survex {
     inherit (darwin.apple_sdk.frameworks) Carbon Cocoa;
   };
