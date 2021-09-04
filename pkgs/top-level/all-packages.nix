@@ -23010,6 +23010,8 @@ in
 
   airwave = callPackage ../applications/audio/airwave { qt5 = qt514; };
 
+  airwindows-lv2-port = callPackage ../applications/audio/airwindows-lv2-port { };
+
   akira-unstable = callPackage ../applications/graphics/akira { };
 
   alembic = callPackage ../development/libraries/alembic {};
