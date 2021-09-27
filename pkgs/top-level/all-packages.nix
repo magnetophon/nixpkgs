@@ -23517,6 +23517,8 @@ with pkgs;
 
   bviplus = callPackage ../applications/editors/bviplus { };
 
+  BYOD = callPackage ../applications/audio/BYOD { };
+
   caerbannog = callPackage ../applications/misc/caerbannog { };
 
   cardboard = callPackage ../applications/window-managers/cardboard { };
