@@ -1,45 +1,20 @@
-{ lib, stdenv, fetchFromGitHub, pkg-config, fetchzip
-, libjack2, alsa-lib, freetype, libX11, libXrandr, libXinerama, libXext, libXcursor
-, libGL, python3, ncurses, libusb1
-, gtk3, webkitgtk, curl, xvfb-run, makeWrapper
-  # "Debug", or "Release"
-, buildType ? "Release"
-}:
+{ lib, stdenv, fetchFromGitHub, fetchzip, cmake, pkg-config, ninja, makeWrapper
+, libjack2, alsa-lib, alsa-tools, freetype, libusb1, libX11, libXrandr
+, libXinerama, libXext, libXcursor, libGL, libxcb, xcbutil, libxkbcommon
+, xcbutilkeysyms, xcb-util-cursor, gtk3, webkitgtk, python3, curl, pcre, mount
+, gnome, patchelf, buildType ? "Release" # "Debug", or "Release"
+# It is not allowed to distribute binaries with the VST2 SDK plugin without a license
+# (the author of Bespoke has such a licence but not Nix). VST3 should work out of the box.
+  # Read more in https://github.com/NixOS/nixpkgs/issues/145607
+, enableVST2 ? false }:
 
 let
-  projucer = stdenv.mkDerivation rec {
-    pname = "projucer";
-    version = "5.4.7";
-
-    src = fetchFromGitHub {
-      owner = "juce-framework";
-      repo = "JUCE";
-      rev = version;
-      sha256= "0qpiqfwwpcghk7ij6w4vy9ywr3ryg7ppg77bmd7783kxg6zbhj8h";
-    };
-
-    nativeBuildInputs = [ pkg-config ];
-    buildInputs = [
-      freetype libX11 libXrandr libXinerama libXext gtk3 webkitgtk
-      libjack2 curl
-    ];
-    preBuild = ''
-      cd extras/Projucer/Builds/LinuxMakefile
-    '';
-    makeFlags = [ "CONFIG=${buildType}" ];
-    enableParallelBuilding = true;
-
-    installPhase = ''
-      mkdir -p $out/bin
-      cp -a build/Projucer $out/bin/Projucer
-    '';
-  };
-
   # equal to vst-sdk in ../oxefmsynth/default.nix
   vst-sdk = stdenv.mkDerivation rec {
     name = "vstsdk3610_11_06_2018_build_37";
     src = fetchzip {
-      url = "https://web.archive.org/web/20181016150224if_/https://download.steinberg.net/sdk_downloads/${name}.zip";
+      url =
+        "https://web.archive.org/web/20181016150224if_/https://download.steinberg.net/sdk_downloads/${name}.zip";
       sha256 = "0da16iwac590wphz2sm5afrfj42jrsnkr1bxcy93lj7a369ildkj";
     };
     installPhase = ''
@@ -47,73 +22,68 @@ let
     '';
   };
 
-in
-stdenv.mkDerivation rec {
+in stdenv.mkDerivation rec {
   pname = "bespokesynth";
-  version = "1.0.0";
+  version = "1.1.0";
 
   src = fetchFromGitHub {
-    owner = "awwbees";
+    owner = "BespokeSynth";
     repo = pname;
     rev = "v${version}";
-    sha256 = "04b2m40jszphslkd4850jcb8qwls392lwy3lc6vlj01h4izvapqk";
+    sha256 = "sha256-PN0Q6/gI1PeMaF/8EZFGJdLR8JVHQZfWunAhOIQxkHw=";
+    fetchSubmodules = true;
   };
 
-  configurePhase = ''
-    runHook preConfigure
+  cmakeFlags = [ "-DCMAKE_BUILD_TYPE=${buildType}" ] ++ lib.optional enableVST2
+    "-DBESPOKE_VST2_SDK_LOCATION=${vst-sdk}/VST2_SDK";
 
-    export HOME=$(mktemp -d)
-    xvfb-run sh -e <<EOF
-      ${projucer}/bin/Projucer --set-global-search-path linux defaultJuceModulePath ${projucer.src}/modules
-      ${projucer}/bin/Projucer --resave BespokeSynth.jucer
-    EOF
+  nativeBuildInputs = [ python3 makeWrapper cmake pkg-config ninja ];
 
-    runHook postConfigure
-  '';
-  CFLAGS = "-I${vst-sdk}/VST2_SDK";
-
-  nativeBuildInputs = [ xvfb-run pkg-config python3 makeWrapper ];
-
+  # List obtained in https://github.com/BespokeSynth/BespokeSynth/blob/main/azure-pipelines.yml
   buildInputs = [
-    libX11 libXrandr libXinerama libXext libXcursor freetype libGL
-    ncurses libusb1
-    alsa-lib libjack2
+    libX11
+    libXrandr
+    libXinerama
+    libXext
+    libXcursor
+    curl
+    gtk3
+    webkitgtk
+    freetype
+    libGL
+    libusb1
+    alsa-lib
+    libjack2
+    gnome.zenity
+    alsa-tools
+    libxcb
+    xcbutil
+    libxkbcommon
+    xcbutilkeysyms
+    xcb-util-cursor
+    pcre
+    mount
+    patchelf
   ];
 
-  preBuild = ''
-    cd Builds/LinuxMakefile
-  '';
-  makeFlags = [ "CONFIG=${buildType}" ];
-  enableParallelBuilding = true;
-
-  installPhase = ''
-    runHook preInstall
-
-    mkdir -p $out/bin $out/share/bespokesynth $out/share/applications $out/share/icons/hicolor/512x512/apps
-    cp build/BespokeSynth $out/bin/
-    cp -ar ../MacOSX/build/Release/resource $out/share/bespokesynth/
-    wrapProgram $out/bin/BespokeSynth \
-      --run "cd $out/share/bespokesynth"
-
-    mkdir -p $out/share/applications/ $out/share/icons/hicolor/512x512/apps/
-    cp ../../bespoke_icon.png $out/share/icons/hicolor/512x512/apps/
-    substitute ../../BespokeSynth.desktop $out/share/applications/BespokseSynth.desktop \
-      --replace "/usr/bin/" ""
-
-    runHook postInstall
+  # Ensure zenity is available, or it won't be able to open new files.
+  # Ensure the python used for compilation is the same as the python used at run-time.
+  # jedi is also required for auto-completion.
+  postInstall = ''
+    wrapProgram $out/bin/BespokeSynth --prefix PATH : '${
+      lib.makeBinPath [
+        gnome.zenity
+        (python3.withPackages (ps: with ps; [ jedi ]))
+      ]
+    }'
   '';
 
   meta = with lib; {
-    description = "Software modular synth with controllers support, scripting and VST";
+    description =
+      "Software modular synth with controllers support, scripting and VST";
     homepage = "https://github.com/awwbees/BespokeSynth";
-    license = with licenses; [
-      gpl3Plus
-
-      # This package is unfree and not distributable due to the license of VST2.
-      # see #145607
-      unfree
-    ];
-    maintainers = with maintainers; [ astro ];
+    license = with licenses; [ gpl3Plus ] ++ lib.optional enableVST2 unfree;
+    maintainers = with maintainers; [ astro tobiasBora ];
     platforms = platforms.all;
   };
 }
