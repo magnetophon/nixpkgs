@@ -19,13 +19,13 @@ let
 
 in stdenv.mkDerivation rec {
   pname = "surge-XT";
-  version = "unstable-2021-11-30";
+  version = "unstable-2021-12-07";
 
   src = fetchFromGitHub {
     owner = "surge-synthesizer";
     repo = "surge";
-    rev = "d04ac3d3a2233e5532e9e46c4d614d6da6084035";
-    sha256 = "sha256-aqC+bpzv2HJI/GjmKMrOcofg4/z4X1Oie4jX3O537iM=";
+    rev = "c61ae7f2e1e8ecfc646030618bd3c4439d3ddf79";
+    sha256 = "sha256-R8qGDxJffYddeDjEtoIe0gB+WMwCEyvoAAhaxPyM/SA=";
     fetchSubmodules = true;
   };
 
@@ -45,7 +45,7 @@ in stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
-    "-Bbuild_lv2"
+    "-Bbuild"
     "-DJUCE_SUPPORTS_LV2=True"
     "-DSURGE_JUCE_PATH=${juce-lv2}"
   ];
@@ -53,17 +53,11 @@ in stdenv.mkDerivation rec {
   enableParallelBuilding = true;
 
   buildPhase = ''
-    cmake --build build_lv2 --config Release --target surge-xt_LV2
-    cmake --build build_lv2 --config Release --target surge-fx_LV2
+    cmake --build build --target surge-xt_LV2 surge-fx_LV2 surge-xt_Packaged surge-fx_Packaged --parallel
   '';
 
   installPhase = ''
-    mkdir -p $out/lib/lv2 $out/lib/vst3 $out/share/Surge\ XT
-    cp -r build_lv2/src/surge-xt/surge-xt_artefacts/Release/LV2/Surge\ XT.lv2 $out/lib/lv2
-    cp -r build_lv2/src/surge-xt/surge-xt_artefacts/Release/VST3/Surge\ XT.vst3 $out/lib/vst3
-    cp -r build_lv2/src/surge-fx/surge-fx_artefacts/Release/VST3/Surge\ XT\ Effects.vst3 $out/lib/vst3
-    cp -r build_lv2/src/surge-fx/surge-fx_artefacts/Release/LV2/Surge\ XT\ Effects.lv2 $out/lib/lv2
-    cp -r ../resources/data/* $out/share/Surge\ XT/
+    cmake --install build
   '';
 
   doInstallCheck = false;
