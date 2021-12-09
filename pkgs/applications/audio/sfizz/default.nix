@@ -61,15 +61,21 @@ stdenv.mkDerivation rec {
 
   postPatch = ''
     substituteInPlace plugins/editor/src/editor/NativeHelpers.cpp \
-    --replace '/usr/bin/zenity' '${gnome.zenity}/bin/zenity'
+    --replace 'return s;' 'return std::string("${gnome.zenity}/bin/zenity");'
+
+    substituteInPlace plugins/editor/src/editor/NativeHelpers.cpp \
+  --replace '/usr/bin/zenity' '${gnome.zenity}/bin/zenity'
+
+cat plugins/editor/src/editor/NativeHelpers.cpp | grep zenity
   '';
 
-  # postInstall = ''
-  # wrapProgram $out/bin/sfizz_jack --prefix PATH ":" ${gnome.zenity}/bin
-  # wrapProgram $out/bin/sfizz_render --prefix PATH ":" ${gnome.zenity}/bin
-  # '';
+    #
+    # postInstall = ''
+    # wrapProgram $out/bin/sfizz_jack --prefix PATH ":" ${gnome.zenity}/bin
+    # wrapProgram $out/bin/sfizz_render --prefix PATH ":" ${gnome.zenity}/bin
+    # '';
 
-  cmakeFlags = [ "-DCMAKE_BUILD_TYPE=Release" "-DSFIZZ_TESTS=ON" ];
+    cmakeFlags = [ "-DCMAKE_BUILD_TYPE=Release" "-DSFIZZ_TESTS=ON" ];
 
   meta = with lib; {
     homepage = "https://github.com/sfztools/sfizz";
