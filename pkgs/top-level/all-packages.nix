@@ -27028,6 +27028,8 @@ with pkgs;
     ocamlPackages = ocaml-ng.ocamlPackages_4_01_0;
   };
 
+  monique-monosynth = callPackage ../applications/audio/monique-monosynth { };
+
   monitor = callPackage ../applications/system/monitor { };
 
   moolticute = libsForQt5.callPackage ../applications/misc/moolticute { };
