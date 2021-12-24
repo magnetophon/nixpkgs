@@ -17,14 +17,15 @@
 let
   juce-lv2 = stdenv.mkDerivation {
     pname = "juce-lv2";
-    version = "unstable-2021-12-11";
+    version = "unstable-2021-12-22";
 
     # lv2 branch
     src = fetchFromGitHub {
       owner = "lv2-porting-project";
       repo = "JUCE";
-      rev = "5106d9d77b892c22afcb9379c13982f270429e2e";
-      sha256 = "sha256-bpZJ5NEDRfMtmx0RkKQFZWqS/SnYAFRhrDg9MSphh4c=";
+      # see https://github.com/lv2-porting-project/JUCE/issues/18
+      rev = "c5174d84fdb12e2233ec3c502fb6a9c54ed87a9f";
+      sha256 = "sha256-jwWDB0XXaKkHJDNOSnhV4tDd+2lt61Qp8gFwXDuY63c=";
     };
 
     dontConfigure = true;
@@ -37,14 +38,14 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "surge-XT";
-  version = "unstable-2021-12-11";
+  version = "unstable-2021-12-24";
 
   src = fetchFromGitHub {
     owner = "surge-synthesizer";
     repo = "surge";
-    rev = "320f68543d0279c11cea8dc7f5170399cccc9602";
+    rev = "74164850e53d4891083a1055da5de538bad6f0a1";
     fetchSubmodules = true;
-    sha256 = "sha256-Jcs5FpX5AZl72aKYNbRcfYqb2PRt0r1pQXk957xk0aM=";
+    sha256 = "sha256-SN1m7BWvLQ7EtaNpfZZ8JB9fHDkd9fa6txAoJvjZpBI=";
   };
 
   nativeBuildInputs = [
@@ -76,6 +77,7 @@ stdenv.mkDerivation rec {
     "-lXcursor"
     "-lXinerama"
     "-lXrandr"
+    "-ljack -L${libjack2}"
   ]);
 
   # see https://github.com/NixOS/nixpkgs/pull/149487#issuecomment-991747333
