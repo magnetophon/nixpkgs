@@ -26772,6 +26772,8 @@ with pkgs;
 
   looking-glass-client = callPackage ../applications/virtualization/looking-glass-client { };
 
+  loopers = callPackage ../applications/audio/loopers { };
+
   ltc-tools = callPackage ../applications/audio/ltc-tools { };
 
   lscolors = callPackage ../applications/misc/lscolors { };
