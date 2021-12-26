@@ -17,15 +17,21 @@
 let
   juce-lv2 = stdenv.mkDerivation {
     pname = "juce-lv2";
-    version = "unstable-2021-12-22";
+    version = "unstable-2021-12-11";
 
     # lv2 branch
     src = fetchFromGitHub {
       owner = "lv2-porting-project";
       repo = "JUCE";
       # see https://github.com/lv2-porting-project/JUCE/issues/18
-      rev = "c5174d84fdb12e2233ec3c502fb6a9c54ed87a9f";
-      sha256 = "sha256-jwWDB0XXaKkHJDNOSnhV4tDd+2lt61Qp8gFwXDuY63c=";
+      # rev = "c5174d84fdb12e2233ec3c502fb6a9c54ed87a9f";
+      # sha256 = "sha256-jwWDB0XXaKkHJDNOSnhV4tDd+2lt61Qp8gFwXDuY63c=";
+      # see https://github.com/lv2-porting-project/JUCE/issues/18#issuecomment-1001005528
+      # rev = "13e817f41f381a72a788618852f9c6799c9a9711";
+      # sha256 = "sha256-RNS/CahCWT56n8dReAnMUFAtjZ5jJRvJtecrIgiW8fI=";
+      # see https://github.com/lv2-porting-project/JUCE/issues/18?notification_referrer_id=NT_kwDOAHSqD7IyODY2NjgyNDQ2Ojc2NDU3MTE&notifications_query=is%3Aunread#issuecomment-1001152634
+      rev = "936a26d4beb49529d68f3c67765d783dc2de4e62";
+      sha256 = "sha256-XtLN77GZadKNE5ZfifrvcWIfql15z5KfXzyGYH9/M+c=";
     };
 
     dontConfigure = true;
