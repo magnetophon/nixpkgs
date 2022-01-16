@@ -27,13 +27,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "${prefix}jack2";
-  version = "1.9.19";
+  version = "1.9.20";
 
   src = fetchFromGitHub {
     owner = "jackaudio";
     repo = "jack2";
     rev = "v${version}";
-    sha256 = "01s8i64qczxqawgrzrw19asaqmcspf5l2h3203xzg56wnnhhzcw7";
+    sha256 = "sha256-H9vT7N4cALPBqXzVtkL24IPx1BOpTwznA4AQ6ZL3IsY=";
   };
 
   nativeBuildInputs = [ pkg-config python makeWrapper wafHook ];
@@ -43,10 +43,10 @@ stdenv.mkDerivation rec {
     aften AudioUnit CoreAudio Accelerate libobjc
   ];
 
-  prePatch = ''
-    substituteInPlace svnversion_regenerate.sh \
-        --replace /bin/bash ${bash}/bin/bash
-  '';
+  # prePatch = ''
+  # substituteInPlace svnversion_regenerate.sh \
+  # --replace /bin/bash ${bash}/bin/bash
+  # '';
 
   PKGCONFIG = "${stdenv.cc.targetPrefix}pkg-config";
 
@@ -55,8 +55,8 @@ stdenv.mkDerivation rec {
     "--classic"
     "--autostart=${if (optDbus != null) then "dbus" else "classic"}"
   ] ++ optional (optDbus != null) "--dbus"
-    ++ optional (optLibffado != null) "--firewire"
-    ++ optional (optAlsaLib != null) "--alsa";
+  ++ optional (optLibffado != null) "--firewire"
+  ++ optional (optAlsaLib != null) "--alsa";
 
   postInstall = (if libOnly then ''
     rm -rf $out/{bin,share}
