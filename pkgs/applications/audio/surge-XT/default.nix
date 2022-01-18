@@ -37,14 +37,14 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "surge-XT";
-  version = "unstable-2022-01-12";
+  version = "1.0.0";
 
   src = fetchFromGitHub {
     owner = "surge-synthesizer";
     repo = "surge";
-    rev = "320cd702b6778f238c3370e0582fce58265a6fe3";
+    rev = "release_xt_${version}";
     fetchSubmodules = true;
-    sha256 = "sha256-4huj++7NLpqb8Vyf0I9JeK86gxd47o31Jj/IJuB7ztk=";
+    sha256 = "sha256-9PXgbQYiKNdUcZ4wvwOpX7kh0cmogWKHfzrxv0OMjoE=";
   };
 
   nativeBuildInputs = [
