@@ -62,13 +62,13 @@ in
 
 stdenv.mkDerivation rec {
   name = "cardinal-${version}";
-  version = "unstable-2022-01-14";
+  version = "unstable-2022-01-29";
 
   src = fetchFromGitHub {
     owner = "DISTRHO";
     repo = "cardinal";
-    rev = "e0d6d59ce9aa956a1bb093c27c2da67991fafc1f";
-    sha256 = "sha256-sg0yP7rgpW3pPZDdyNFFcY4+zYvbjcBRhOf3t2PusRI=";
+    rev = "756271f1d280db4e1b56f041612609014d14b478";
+    sha256 = "sha256-BZoeyrajVR5Gfj6QfLoV390y4MzgzxTpD+zsabW3bcg=";
     fetchSubmodules = true;
   };
 
