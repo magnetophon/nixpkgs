@@ -24703,6 +24703,8 @@ with pkgs;
 
   carddav-util = callPackage ../tools/networking/carddav-util { };
 
+  cardinal = callPackage ../applications/audio/cardinal { };
+
   carla = libsForQt5.callPackage ../applications/audio/carla { };
 
   castor = callPackage ../applications/networking/browsers/castor { };
