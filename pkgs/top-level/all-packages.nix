@@ -25735,6 +25735,8 @@ with pkgs;
 
   filezilla = callPackage ../applications/networking/ftp/filezilla { };
 
+  Fire = callPackage ../applications/audio/Fire { };
+
   firefoxPackages = recurseIntoAttrs (callPackage ../applications/networking/browsers/firefox/packages.nix {
     callPackage = newScope {
       inherit (rustPackages) cargo rustc;
