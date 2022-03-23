@@ -23,22 +23,22 @@
 
 stdenv.mkDerivation rec {
   name = "cardinal-${version}";
-  version = "22.02";
+  version = "22.03";
 
   src = fetchurl {
     url =
       "https://github.com/DISTRHO/Cardinal/releases/download/${version}/cardinal-${version}.tar.xz";
-    sha256 = "sha256-IVlAROFGFffTEU00NCmv74w1DRb7dNMp20FeBVoDrdM=";
+    sha256 = "sha256-lz2VF9d1/DsUlrbLOYcQC2zYXAm0Ec0Qd8uLkTRWgjc=";
   };
 
-  patches = [
-    # see https://github.com/DISTRHO/Cardinal/issues/151#issuecomment-1041886260
-    (fetchpatch {
-      url =
-        "https://github.com/DISTRHO/Cardinal/commit/13e9ef37c5dd35d77a54b1cb006767be7a72ac69.patch";
-      sha256 = "sha256-NYUYLbLeBX1WEzjPi0s/T1N+EXQKyi0ifbPxgBYDjRs=";
-    })
-  ];
+  # patches = [
+  # see https://github.com/DISTRHO/Cardinal/issues/151#issuecomment-1041886260
+  # (fetchpatch {
+  # url =
+  # "https://github.com/DISTRHO/Cardinal/commit/13e9ef37c5dd35d77a54b1cb006767be7a72ac69.patch";
+  # sha256 = "sha256-NYUYLbLeBX1WEzjPi0s/T1N+EXQKyi0ifbPxgBYDjRs=";
+  # })
+  # ];
 
   prePatch = ''
     patchShebangs ./dpf/utils/generate-ttl.sh
