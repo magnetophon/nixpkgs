@@ -1,40 +1,57 @@
-{ lib, stdenv, fetchFromGitHub, pkg-config, makeWrapper
+{ lib, stdenv, fetchurl, fetchpatch, pkg-config, makeWrapper
 , libsndfile, jack2
 , libGLU, libGL, lv2, cairo
-, ladspaH, php }:
+, ladspaH, php, git, }:
 
 stdenv.mkDerivation rec {
   pname = "lsp-plugins";
-  version = "1.1.31";
+  version = "1.2.0";
 
-  src = fetchFromGitHub {
-    owner = "sadko4u";
-    repo = pname;
-    rev = version;
-    sha256 = "sha256-P1woSkenSlVUwWr3q0sNv8K2fVtTa6zWwKfSHQgg9Xw=";
+  src = fetchurl {
+    url = "https://github.com/sadko4u/${pname}/releases/download/${version}/${pname}-src-${version}.tar.gz";
+    sha256 = "sha256-r3UzK/mW3Vcq4ajm6jU30CzJXFoFt+4EWXr9BogA6Xc=";
   };
 
-  nativeBuildInputs = [ pkg-config php makeWrapper ];
+  # https://github.com/sadko4u/lsp-plugins/issues/6
+  fw-patch =
+    fetchpatch {
+      url = "https://github.com/lsp-plugins/lsp-plugin-fw/commit/6197e64939b63998e44a6b240546d60a2608d106.patch";
+      sha256 = "sha256-7icOjjfjQzUrfcyl/dqc/U6QFb8BmjH4Foz4j7b2D6Q=";
+    };
+
+  ws-patch =
+    fetchpatch {
+      url = "https://github.com/lsp-plugins/lsp-ws-lib/commit/7d5762ed4b09a6d67d5bf652cf6f848f39c28a19.patch";
+      sha256 = "sha256-nL9rf6u0DY+PFeWJaD3LocptI8vpRG9tuS/pupCT2Gg=";
+    };
+
+  main-patch =
+    fetchpatch {
+      url = "https://github.com/sadko4u/lsp-plugins/commit/dbf4dc44404f0f9abed1cfbbff38fb3cc10b72cc.patch";
+      sha256 = "sha256-Rrr0ZUMnh9iEQvU2028JoHyWY1QlhXBBKTf/FwaAJIM=";
+    };
+
+  nativeBuildInputs = [ pkg-config php makeWrapper git ];
   buildInputs = [ jack2 libsndfile libGLU libGL lv2 cairo ladspaH ];
 
   makeFlags = [
     "PREFIX=${placeholder "out"}"
-    "ETC_PATH=$(out)/etc"
   ];
 
   NIX_CFLAGS_COMPILE = "-DLSP_NO_EXPERIMENTAL";
 
-  doCheck = true;
-
-  checkPhase = ''
-    runHook preCheck
-    TEST_PATH=$(pwd)".build-test"
-    make OBJDIR=$TEST_PATH test
-    $TEST_PATH/lsp-plugins-test utest
-    runHook postCheck
+  postPatch = ''
+    cd modules/lsp-plugin-fw
+    git apply ${fw-patch}
+    cd ../lsp-ws-lib && git apply ${ws-patch}
+    cd ../.. && git apply ${main-patch}
   '';
 
-  buildFlags = [ "release" ];
+  configurePhase = ''
+    make config PREFIX=${placeholder "out"}
+  '';
+
+  doCheck = true;
 
   enableParallelBuilding = true;
 
