@@ -18415,6 +18415,8 @@ with pkgs;
 
   libspectre = callPackage ../development/libraries/libspectre { };
 
+  libspecbleach = callPackage ../development/libraries/audio/libspecbleach { };
+
   libspnav = callPackage ../development/libraries/libspnav { };
 
   libgsf = callPackage ../development/libraries/libgsf { };
