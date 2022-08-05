@@ -3,16 +3,17 @@
 , libGLU, lv2, gtk2, cairo, pango, fftwFloat, zita-convolver }:
 
 stdenv.mkDerivation rec {
-  version = "20220327";
+  version = "20220714";
   pname = "x42-plugins";
 
   src = fetchurl {
     url = "https://gareus.org/misc/x42-plugins/${pname}-${version}.tar.xz";
-    sha256 = "sha256-IhuPqTlCbCxExT5B9Au42RQQl4sDEvz6+HhsuT02KVs=";
+    sha256 = "sha256-myrHOfgpCwuW8YX0jZ3RutoqtXysU0ejBNcuxN3stXU=";
   };
 
   nativeBuildInputs = [ pkg-config ];
   buildInputs = [ libGLU ftgl freefont_ttf libjack2 libltc libsndfile libsamplerate lv2 gtk2 cairo pango fftwFloat zita-convolver ];
+  enableParallelBuilding = true;
 
   # Don't remove this. The default fails with 'do not know how to unpack source archive'
   # every now and then on Hydra. No idea why.
