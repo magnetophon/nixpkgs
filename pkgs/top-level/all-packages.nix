@@ -28898,6 +28898,7 @@ with pkgs;
   odo = callPackage ../applications/networking/cluster/odo { };
 
   odin2 = callPackage ../applications/audio/odin2 { };
+  digidrie = callPackage ../applications/audio/digidrie { };
 
   okteto = callPackage ../development/tools/okteto { };
 
