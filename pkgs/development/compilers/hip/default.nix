@@ -14,6 +14,7 @@
 , numactl
 , perl
 , python3
+, python3Packages
 , rocclr
 , rocm-comgr
 , rocm-device-libs
@@ -29,13 +30,13 @@
 let
   hip = stdenv.mkDerivation rec {
     pname = "hip";
-    version = "5.3.0";
+    version = "5.3.1";
 
     src = fetchFromGitHub {
       owner = "ROCm-Developer-Tools";
       repo = "HIP";
       rev = "rocm-${version}";
-      hash = "sha256-UAodlVUiTU4n/EyvTIuQekTGh4izmBjKCRXOHXVKY4M=";
+      hash = "sha256-kmRvrwnT0h2dBMI+H9d1vmeW3TmDBD+qW4YYhaMV2dE=";
     };
 
     patches = [
@@ -109,17 +110,17 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "hip";
-  version = "5.3.0";
+  version = "5.3.1";
 
   src = fetchFromGitHub {
     owner = "ROCm-Developer-Tools";
     repo = "hipamd";
     rev = "rocm-${version}";
-    hash = "sha256-gZGZiDP/HbdmzLQkG9Jq9lyMP9hoD6UzTMiX9cUmQNA=";
+    hash = "sha256-i7hT/j+V0LT6Va2XcQyyKXF1guoIyhcOHvn842wCRx4=";
   };
 
   nativeBuildInputs = [ cmake python3 makeWrapper perl ];
-  buildInputs = [ libxml2 numactl libglvnd libX11 ];
+  buildInputs = [ libxml2 numactl libglvnd libX11 python3Packages.cppheaderparser ];
   propagatedBuildInputs = [
     clang
     llvm
@@ -154,6 +155,11 @@ stdenv.mkDerivation rec {
     "-DHIP_COMMON_DIR=${hip}"
     "-DROCCLR_PATH=${rocclr}"
     "-DHIP_VERSION_BUILD_ID=0"
+    # Temporarily set variables to work around upstream CMakeLists issue
+    # Can be removed once https://github.com/ROCm-Developer-Tools/hipamd/issues/55 is fixed
+    "-DCMAKE_INSTALL_BINDIR=bin"
+    "-DCMAKE_INSTALL_INCLUDEDIR=include"
+    "-DCMAKE_INSTALL_LIBDIR=lib"
   ];
 
   postInstall = ''

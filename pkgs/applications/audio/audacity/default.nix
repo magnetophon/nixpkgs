@@ -4,6 +4,7 @@
 , fetchpatch
 , cmake
 , makeWrapper
+, wrapGAppsHook
 , pkg-config
 , python3
 , gettext
@@ -91,6 +92,7 @@ stdenv.mkDerivation rec {
     pkg-config
     python3
     makeWrapper
+    wrapGAppsHook
   ] ++ optionals stdenv.isLinux [
     linuxHeaders
   ];
@@ -147,6 +149,7 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
+    "-DAUDACITY_BUILD_LEVEL=2"
     "-DAUDACITY_REV_LONG=nixpkgs"
     "-DAUDACITY_REV_TIME=nixpkgs"
     "-DDISABLE_DYNAMIC_LOADING_FFMPEG=ON"

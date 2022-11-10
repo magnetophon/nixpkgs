@@ -10,22 +10,25 @@
 
 buildGoModule rec {
   pname = "buf";
-  version = "1.8.0";
+  version = "1.9.0";
 
   src = fetchFromGitHub {
     owner = "bufbuild";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-yU1xPOnSQXrYdF24EsXb/x+IfoQFjIbW1KEt//7Fl5Q=";
+    sha256 = "sha256-KnG1FUdC8xpW/wI4E8+RzO0StKF+N7Wx1jTWNm4302M=";
   };
 
-  vendorSha256 = "sha256-zEcKfMib/4/GfQC7M3f8R3v/hGh9F/KtjFs+pXDzbFk=";
+  vendorSha256 = "sha256-e/hkJoQ1GkSl4mhhgYVB4POult87DzWOXRLGyDVP+M0=";
 
   patches = [
     # Skip a test that requires networking to be available to work.
     ./skip_test_requiring_network.patch
     # Skip TestWorkspaceGit which requires .git and commits.
     ./skip_test_requiring_dotgit.patch
+    # Remove reliance of tests on file protocol which is disabled in git by default now
+    # Rebased upstream change https://github.com/bufbuild/buf/commit/bcaa77f8bbb8f6c198154c7c8d53596da4506dab
+    ./buf-tests-dont-use-file-transport.patch
   ];
 
   nativeBuildInputs = [ installShellFiles ];

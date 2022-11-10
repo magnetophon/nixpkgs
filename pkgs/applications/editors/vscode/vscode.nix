@@ -18,17 +18,17 @@ let
   archive_fmt = if stdenv.isDarwin then "zip" else "tar.gz";
 
   sha256 = {
-    x86_64-linux = "0hj6rpg65ivnnvzfjm16vjpjzzqbabpw5ldrr78x7ddrr06h02z6";
-    x86_64-darwin = "01gskihfp5s0j4dw8nxmfsp0sav1zqlmylmvwhi1y2qqq4y9c3w9";
-    aarch64-linux = "07n1svlkd2ji4b6yvhci6qvx429xipp8y418cqq3173gw8v59lws";
-    aarch64-darwin = "0gr94l7lk54fhhhqbiv23hd7d25xilqlwla2dbs5c171nj9pz325";
-    armv7l-linux = "0nxnjrzwfvma9zl4x11r45qwqq8mk91cxg47mg33qgr22lvbgz63";
+    x86_64-linux = "1m5mz6wdrivqrw699iivvh62bdn4yzm6hmph455sdyvk5icq59dq";
+    x86_64-darwin = "1zn0h9p05kb3fcn816fpxh8asaglycjmpiwkrmxd0s8jwjq7m4gn";
+    aarch64-linux = "1gs810iz08jxqfhcgi6ab41m46ib5h3m7i3pnyvlimxx99r5lirf";
+    aarch64-darwin = "1dvasr1h28snxi33m6yx95pp3jd4irwy6yav4ilwrcl22cf6ybvi";
+    armv7l-linux = "1j5vrpdaqihcr02pdsd5nz07zsk0027xmkfp30npnjy1gjrjvnim";
   }.${system} or throwSystem;
 in
   callPackage ./generic.nix rec {
     # Please backport all compatible updates to the stable release.
     # This is important for the extension ecosystem.
-    version = "1.72.1";
+    version = "1.73.1";
     pname = "vscode";
 
     executableName = "code" + lib.optionalString isInsiders "-insiders";
@@ -45,6 +45,11 @@ in
     sourceRoot = "";
 
     updateScript = ./update-vscode.sh;
+
+    # Editing the `code` binary within the app bundle causes the bundle's signature
+    # to be invalidated, which prevents launching starting with macOS Ventura, because VS Code is notarized.
+    # See https://eclecticlight.co/2022/06/17/app-security-changes-coming-in-ventura/ for more information.
+    dontFixup = stdenv.isDarwin;
 
     meta = with lib; {
       description = ''
