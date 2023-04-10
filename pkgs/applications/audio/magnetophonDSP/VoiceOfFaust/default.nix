@@ -18,6 +18,8 @@ stdenv.mkDerivation rec {
 
   runtimeInputs = [ pitchTracker ];
 
+  dontWrapQtApps = true;
+
   patchPhase = ''
     sed -i "s@pd -nodac@${pitchTracker}/bin/pd -nodac@g" launchers/pitchTracker
     sed -i "s@pd -nodac@${pitchTracker}/bin/pd -nodac@g" launchers/pitchTrackerGUI

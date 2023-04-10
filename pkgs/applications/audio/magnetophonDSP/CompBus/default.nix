@@ -13,6 +13,7 @@ stdenv.mkDerivation rec {
   buildInputs = [ faust2jaqt faust2lv2 ];
 
   makeFlags = [ "PREFIX=$(out)" ];
+  dontWrapQtApps = true;
   enableParallelBuilding = true;
 
   postInstall = ''

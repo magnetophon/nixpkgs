@@ -13,6 +13,8 @@ stdenv.mkDerivation rec {
   buildInputs = [ faust2jaqt faust2lv2 ];
 
   makeFlags = [ "PREFIX=$(out)" ];
+  dontWrapQtApps = true;
+  enableParallelBuilding = true;
 
   postInstall = ''
     for f in $(find . -executable -type f -name '*-wrapped'); do
