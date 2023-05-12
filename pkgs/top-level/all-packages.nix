@@ -38375,6 +38375,8 @@ with pkgs;
 
   faust2lv2 = callPackage ../applications/audio/faust/faust2lv2.nix { };
 
+  faust2sc = callPackage ../applications/audio/faust/faust2sc.nix { };
+
   faustlive = callPackage ../applications/audio/faust/faustlive.nix { };
 
   faustPhysicalModeling = callPackage ../applications/audio/faustPhysicalModeling  { };
