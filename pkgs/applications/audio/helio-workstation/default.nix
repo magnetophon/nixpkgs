@@ -5,15 +5,17 @@
 
 stdenv.mkDerivation rec {
   pname = "helio-workstation";
-  version = "3.10";
+  version = "3.11";
 
   src = fetchFromGitHub {
     owner = "helio-fm";
     repo = pname;
     rev = version;
     fetchSubmodules = true;
-    sha256 = "sha256-TqwebaFZXUto+azVJQlggqAc7WKDxAaXxyXcG8x5S/w=";
+    sha256 = "sha256-ec4ueg6TNo3AaZ81j01OQZzhgOfSzG1/Vd0QhEXOUl0=";
   };
+
+  enableParallelBuilding = true;
 
   buildInputs = [
     alsa-lib freetype xorg.libX11 xorg.libXext xorg.libXinerama xorg.libXrandr
