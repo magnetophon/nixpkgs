@@ -1,0 +1,119 @@
+From 6512100cea03807df6550331017e7dc849c40dd7 Mon Sep 17 00:00:00 2001
+From: Bart Brouns <bart@magnetophon.nl>
+Date: Tue, 16 May 2023 13:35:48 +0200
+Subject: [PATCH] make preset management thread safe
+
+---
+ tools/faust2appls/faust2cagtk | 13 +++++++------
+ tools/faust2appls/faust2caqt  | 11 ++++++-----
+ tools/faust2appls/faust2jack  | 12 ++++++------
+ tools/faust2appls/faust2jaqt  | 11 ++++++-----
+ 4 files changed, 25 insertions(+), 22 deletions(-)
+
+diff --git a/tools/faust2appls/faust2cagtk b/tools/faust2appls/faust2cagtk
+index 7366fa3ae..7ad35ad64 100755
+--- a/tools/faust2appls/faust2cagtk
++++ b/tools/faust2appls/faust2cagtk
+@@ -131,13 +131,14 @@ EndOfCode
+ 
+     # add preset management
+     if [ $PRESETDIR = "auto" ]; then
+-        echo "#define PRESETDIR \"/var/tmp/\"" > "preset.cpp"
++        PRESETFILE=`mktemp -t preset.XXXXXXXXXX.cpp` || exit 1
++        echo "#define PRESETDIR \"/var/tmp/\"" > "$PRESETFILE"
+     else
+-        echo "#define PRESETDIR \"$PRESETDIR\"" > "preset.cpp"
++        PRESETFILE=`mktemp -t preset.XXXXXXXXXX.cpp` || exit 1
++        echo "#define PRESETDIR \"$PRESETDIR\"" > "$PRESETFILE"
+     fi
+-
+-    cat "preset.cpp" "${f%.dsp}_tmp.cpp" > "${f%.dsp}.cpp"
+-    rm "preset.cpp" "${f%.dsp}_tmp.cpp"
++    cat "$PRESETFILE" "${f%.dsp}_tmp.cpp" > "${f%.dsp}.cpp"
++    rm "$PRESETFILE" "${f%.dsp}_tmp.cpp"
+ 
+     # compile c++ to binary
+     (
+@@ -156,4 +157,4 @@ EndOfCode
+     BINARIES="$BINARIES${f%.dsp};"
+ done
+ 
+-echo $BINARIES
+\ No newline at end of file
++echo $BINARIES
+diff --git a/tools/faust2appls/faust2caqt b/tools/faust2appls/faust2caqt
+index 8660d39f1..39c381502 100755
+--- a/tools/faust2appls/faust2caqt
++++ b/tools/faust2appls/faust2caqt
+@@ -204,13 +204,14 @@ EndOfCode
+ 
+     # add preset management
+     if [ $PRESETDIR = "auto" ]; then
+-        echo "#define PRESETDIR \"/var/tmp/\"" > "$TMP/preset.cpp"
++        PRESETFILE=`mktemp -t preset.XXXXXXXXXX.cpp` || exit 1
++        echo "#define PRESETDIR \"/var/tmp/\"" > "$PRESETFILE"
+     else
+-        echo "#define PRESETDIR \"$PRESETDIR\"" > "$TMP/preset.cpp"
++        PRESETFILE=`mktemp -t preset.XXXXXXXXXX.cpp` || exit 1
++        echo "#define PRESETDIR \"$PRESETDIR\"" > "$PRESETFILE"
+     fi
+-
+-    cat "$TMP/preset.cpp" "$TMP/${f%.dsp}_tmp.cpp" > "$TMP/${f%.dsp}.cpp"
+-    rm "$TMP/preset.cpp" "$TMP/${f%.dsp}_tmp.cpp"
++    cat "$PRESETFILE" "${f%.dsp}_tmp.cpp" > "${f%.dsp}.cpp"
++    rm "$PRESETFILE" "${f%.dsp}_tmp.cpp"
+ 
+     # compile c++ to binary
+     (
+diff --git a/tools/faust2appls/faust2jack b/tools/faust2appls/faust2jack
+index 8634188b8..2eb687a7c 100755
+--- a/tools/faust2appls/faust2jack
++++ b/tools/faust2appls/faust2jack
+@@ -149,14 +149,14 @@ EndOfCode
+ 
+     # add preset management
+     if [ $PRESETDIR = "auto" ]; then
+-        echo "#define PRESETDIR \"/var/tmp/\"" > "preset.cpp"
++        PRESETFILE=`mktemp -t preset.XXXXXXXXXX.cpp` || exit 1
++        echo "#define PRESETDIR \"/var/tmp/\"" > "$PRESETFILE"
+     else
+-        echo "#define PRESETDIR \"$PRESETDIR\"" > "preset.cpp"
++        PRESETFILE=`mktemp -t preset.XXXXXXXXXX.cpp` || exit 1
++        echo "#define PRESETDIR \"$PRESETDIR\"" > "$PRESETFILE"
+     fi
+-
+-    cat "preset.cpp" "${f%.dsp}_tmp.cpp" > "${f%.dsp}.cpp"
+-    rm "preset.cpp" "${f%.dsp}_tmp.cpp"
+-
++    cat "$PRESETFILE" "${f%.dsp}_tmp.cpp" > "${f%.dsp}.cpp"
++    rm "$PRESETFILE" "${f%.dsp}_tmp.cpp"
+     # compile c++ to binary
+     (
+         $CXX $CXXFLAGS $FAUSTTOOLSFLAGS "${f%.dsp}.cpp" `pkg-config --cflags --libs jack $OCVLIBS gtk+-2.0` $LLVM_LIBS $SOUNDFILELIBS $SAMPLERATELIBS $PROCARCH $OSCDEFS $HTTPDEFS $HTTPLIBS $OCVDEFS $MIDIDEFS $POLYDEFS $SOUNDFILEDEFS $SAMPLERATEDEFS $PRESETDEFS $ARCHLIB $LFLAGS -o "${f%.dsp}"
+diff --git a/tools/faust2appls/faust2jaqt b/tools/faust2appls/faust2jaqt
+index ae6f3edd3..7c295248e 100755
+--- a/tools/faust2appls/faust2jaqt
++++ b/tools/faust2appls/faust2jaqt
+@@ -198,13 +198,14 @@ EndOfCode
+ 
+     # add preset management
+     if [ $PRESETDIR = "auto" ]; then
+-        echo "#define PRESETDIR \"/var/tmp/\"" > "$TMP/preset.cpp"
++        PRESETFILE=`mktemp -t preset.XXXXXXXXXX.cpp` || exit 1
++        echo "#define PRESETDIR \"/var/tmp/\"" > "$PRESETFILE"
+     else
+-        echo "#define PRESETDIR \"$PRESETDIR\"" > "$TMP/preset.cpp"
++        PRESETFILE=`mktemp -t preset.XXXXXXXXXX.cpp` || exit 1
++        echo "#define PRESETDIR \"$PRESETDIR\"" > "$PRESETFILE"
+     fi
+-
+-    cat "$TMP/preset.cpp" "$TMP/${f%.dsp}_tmp.cpp" > "$TMP/${f%.dsp}.cpp"
+-    rm "$TMP/preset.cpp" "$TMP/${f%.dsp}_tmp.cpp"
++    cat "$PRESETFILE" "${f%.dsp}_tmp.cpp" > "${f%.dsp}.cpp"
++    rm "$PRESETFILE" "${f%.dsp}_tmp.cpp"
+ 
+     # compile c++ to binary
+     (
+-- 
+2.40.1
+

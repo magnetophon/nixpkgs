@@ -62,6 +62,11 @@ let
         ncurses_static
       ];
 
+
+      patches = [
+        ./0001-make-preset-management-thread-safe.patch
+      ];
+
       passthru = { inherit wrap wrapWithBuildEnv faust2ApplBase; };
 
       preConfigure = ''
