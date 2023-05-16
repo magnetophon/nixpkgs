@@ -1,27 +1,24 @@
 { lib, stdenv, fetchFromGitHub, faust2jaqt, faust2lv2 }:
 stdenv.mkDerivation rec {
   pname = "LazyLimiter";
-  version = "0.3.2";
+  version = "0.3.3";
 
   src = fetchFromGitHub {
     owner = "magnetophon";
     repo = "LazyLimiter";
-    rev = "V${version}";
-    sha256 = "10xdydwmsnkx8hzsm74pa546yahp29wifydbc48yywv3sfj5anm7";
+    rev = version;
+    sha256 = "sha256-JZB9ZMvFLUwBYRxq9Ud2XcwInrKlPTJMZCzygEz4dRM=";
   };
 
   buildInputs = [ faust2jaqt faust2lv2 ];
 
-  buildPhase = ''
-    faust2jaqt -vec -time -t 99999 LazyLimiter.dsp
-    faust2lv2 -vec -time -t 99999  -gui LazyLimiter.dsp
-  '';
+  makeFlags = [ "PREFIX=$(out)" ];
+  enableParallelBuilding = true;
 
-  installPhase = ''
-    mkdir -p $out/bin
-    cp LazyLimiter $out/bin/
-    mkdir -p $out/lib/lv2
-    cp -r LazyLimiter.lv2/ $out/lib/lv2
+  postInstall = ''
+    for f in $(find . -executable -type f -name '*-wrapped'); do
+      cp $f $out/bin/
+    done
   '';
 
   meta = {
