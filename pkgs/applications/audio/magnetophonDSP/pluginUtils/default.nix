@@ -1,34 +1,24 @@
 { lib, stdenv, fetchFromGitHub, faust2jaqt, faust2lv2 }:
 stdenv.mkDerivation rec {
   pname = "pluginUtils";
-  version = "1.1";
+  version = "2.0.0";
 
   src = fetchFromGitHub {
     owner = "magnetophon";
     repo = "pluginUtils";
-    rev = "V${version}";
-    sha256 = "1hnr5sp7k6ypf4ks61lnyqx44dkv35yllf3a3xcbrw7yqzagwr1c";
+    rev = version;
+    sha256 = "sha256-066Y1cuDJftqIXUQMlU6WfD0IcY277U4+8L/VPbSBiY=";
   };
 
   buildInputs = [ faust2jaqt faust2lv2 ];
 
-  buildPhase = ''
-    for f in *.dsp
-      do
-        echo "Building jack standalone for $f"
-        faust2jaqt -vec -time -t 99999 "$f"
-        echo "Building lv2 for $f"
-        faust2lv2 -vec -time -gui -t 99999 "$f"
-      done
-  '';
+  makeFlags = [ "PREFIX=$(out)" ];
+  enableParallelBuilding = true;
 
-  installPhase = ''
-    rm -f *.dsp
-    rm -f *.lib
-    mkdir -p $out/lib/lv2
-    mv *.lv2/ $out/lib/lv2
-    mkdir -p $out/bin
-    cp * $out/bin/
+  postInstall = ''
+    for f in $(find . -executable -type f -name '*-wrapped'); do
+      cp $f $out/bin/
+    done
   '';
 
   meta = {
