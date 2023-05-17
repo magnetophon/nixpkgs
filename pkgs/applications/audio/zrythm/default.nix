@@ -169,6 +169,7 @@ in stdenv.mkDerivation rec {
     zstd
   ];
 
+  dontWrapQtApps = true;
   # Zrythm uses meson to build, but requires cmake for dependency detection.
   dontUseCmakeConfigure = true;
 
