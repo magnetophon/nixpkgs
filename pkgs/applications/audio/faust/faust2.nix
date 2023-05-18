@@ -62,9 +62,9 @@ let
         ncurses_static
       ];
 
-
       patches = [
         ./0001-make-preset-management-thread-safe.patch
+        ./0001-use-XDG_CONFIG_HOME-name-as-the-preset-dir.patch
       ];
 
       passthru = { inherit wrap wrapWithBuildEnv faust2ApplBase; };
@@ -204,7 +204,7 @@ let
             --prefix PATH : "$PATH" \
             --prefix PKG_CONFIG_PATH : "$PKG_CONFIG_PATH" \
             --set NIX_CFLAGS_COMPILE "$NIX_CFLAGS_COMPILE" \
-            --set NIX_LDFLAGS "$NIX_LDFLAGS -lpthread" \
+            --set NIX_LDFLAGS "$NIX_LDFLAGS -lpthread -lstdc++fs" \
             --set "$nix_cc_wrapper_target_host" "''${!nix_cc_wrapper_target_host}" \
             --set "$nix_bintools_wrapper_target_host" "''${!nix_bintools_wrapper_target_host}" \
             --prefix LIBRARY_PATH "$libPath"
