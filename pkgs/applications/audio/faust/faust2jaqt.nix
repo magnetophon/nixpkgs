@@ -15,9 +15,8 @@ let
       workpath=$PWD
       cd -- "$(dirname "$p")"
       binary=$(basename --suffix=.dsp "$p")
-      mv $binary ."$binary"-wrapped
-      makeWrapper "./.$binary-wrapped" ".$binary-temp" --set QT_PLUGIN_PATH "${qtbase}/${qtbase.qtPluginPrefix}"
-      mv ".$binary-temp" "$binary"
+      rm -f .$binary-wrapped
+      wrapProgram $binary --set QT_PLUGIN_PATH "${qtbase}/${qtbase.qtPluginPrefix}"
       sed -i $binary -e 's@exec@cd "$(dirname "$(readlink -f "''${BASH_SOURCE[0]}")")" \&\& exec@g'
       cd $workpath
     done
@@ -39,6 +38,7 @@ faust.wrapWithBuildEnv {
     alsa-lib
     which
   ];
+
 
   dontWrapQtApps = true;
 
