@@ -1,14 +1,14 @@
 { lib, stdenv, fetchFromGitHub, faust2jack, faust2lv2, helmholtz, mrpeach, puredata-with-plugins }:
 stdenv.mkDerivation rec {
   pname = "VoiceOfFaust";
-  version = "1.1.6";
+  version = "1.1.6_big";
 
   src = fetchFromGitHub {
     owner = "magnetophon";
     repo = "VoiceOfFaust";
     # rev = version;
-    rev = "51c52c987cde35d03b0e8074d5a39b3f69d7ab84";
-    sha256 = "sha256-xR3XGebYEhvC9tMt/nJlPKRtLn8dgDV2gUT8obIrmDQ=";
+    rev = "a2de28b3bae69c551aa325b3f55987155f7cf905";
+    sha256 = "sha256-Xv8jglUa73/QEbzmex1saYFUUUv40eSM6YgwMUpFrp0=";
   };
 
   plugins = [ helmholtz mrpeach ];
