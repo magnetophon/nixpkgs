@@ -1,13 +1,14 @@
 { lib, stdenv, fetchFromGitHub, faust2jaqt, faust2lv2 }:
 stdenv.mkDerivation rec {
   pname = "constant-detune-chorus";
-  version = "0.1.5";
+  version = "0.1.6";
 
   src = fetchFromGitHub {
     owner = "magnetophon";
     repo = "constant-detune-chorus";
-    rev = version;
-    sha256 = "sha256-wLAUy21OxGBCwMrp8upjlV6JVsE0YGva6ZR84FrDPV4=";
+    # rev = version;
+    rev = "4a30b295244f47912d68b3bd6e3919ff3e69ad0b";
+    sha256 = "sha256-cw04gYfRHOoTZPwU7xaC5jqj5F5jM6rNvcGiI4C42tw=";
   };
 
   buildInputs = [ faust2jaqt faust2lv2 ];
