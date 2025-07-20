@@ -15,17 +15,19 @@ in
 rustPlatform.buildRustPackage rec {
   pname = "ringboard";
 
-  version = "0.10.0";
+  # latest release doesn't build on latest rust:
+  # https://github.com/SUPERCILEX/clipboard-history/issues/67
+  version = "unstable-2025-07-20";
 
   src = fetchFromGitHub {
     owner = "SUPERCILEX";
     repo = "clipboard-history";
-    rev = version;
-    sha256 = "sha256-e5cZQ0j4gvXlbLCHc6dUVStWzih9HbDAtnSW7v+PKCk=";
+    rev = "6cf5ed412528799b280d8131f6f895e997eda77f";
+    sha256 = "sha256-64QiF94nNcstyJimQobOM1tMQLnkg04xna5I8uZwLUY=";
   };
 
   useFetchCargoVendor = true;
-  cargoHash = "sha256-+E6BzfgUvpBZzkzvPvFfEt/IoVR/wU4uHECs4Dn5pIE=";
+  cargoHash = "sha256-V74JVw9HfdXqAp8JSEZ6PLtZEnRcYf/klrn4/seu7Rs=";
 
   # needs actual nightly, this hack does not compile
   # RUSTC_BOOTSTRAP = 1;
