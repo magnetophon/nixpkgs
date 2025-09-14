@@ -25,13 +25,16 @@ let
 in
 stdenv.mkDerivation {
   pname = "distrho-ports";
-  version = "2021-03-15-unstable-2024-05-01";
+  version = "unstable-2025-04-24";
 
   src = fetchFromGitHub {
     owner = "DISTRHO";
     repo = "DISTRHO-Ports";
-    rev = "b3596e6a690eb0556e69e8b6d943fee2dfbb04fb";
-    sha256 = "00fgqwayd20akww3n2imyqscmyrjyc9jj0ar13k9dhpaxqk2jxbf";
+    rev = "43330739392197cd1b3b0df23b194879ddf68f23";
+    hash= "sha256-r/hhk/WmREtUSlWhQeJbWWlefJKX3ji6S25LI8heT6Q=";
+    # rev = "43330739392197cd1b3b0df23b194879ddf68f23";
+    # hash= "sha256-r/hhk/WmREtUSlWhQeJbWWlefJKX3ji6S25LI8heT6Q=";
+    fetchSubmodules = true;
   };
 
   nativeBuildInputs = [
