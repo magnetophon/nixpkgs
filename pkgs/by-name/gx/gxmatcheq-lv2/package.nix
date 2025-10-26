@@ -1,6 +1,7 @@
 {
   lib,
   stdenv,
+  gcc13Stdenv,
   fetchFromGitHub,
   xorg,
   xorgproto,
@@ -8,8 +9,12 @@
   lv2,
   pkg-config,
 }:
-
-stdenv.mkDerivation rec {
+let
+  # see: https://github.com/brummer10/GxMatchEQ.lv2/issues/8
+  # Use gcc13 on Linux, but default stdenv (clang) on Darwin since gcc13 doesn't build there
+  buildStdenv = if stdenv.isDarwin then stdenv else gcc13Stdenv;
+in
+buildStdenv.mkDerivation rec {
   pname = "GxMatchEQ.lv2";
   version = "0.1";
 
@@ -21,6 +26,7 @@ stdenv.mkDerivation rec {
   };
 
   nativeBuildInputs = [ pkg-config ];
+
   buildInputs = [
     xorg.libX11
     xorgproto
