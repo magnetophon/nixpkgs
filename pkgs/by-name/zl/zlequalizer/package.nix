@@ -29,13 +29,13 @@
 
 clangStdenv.mkDerivation (finalAttrs: {
   pname = "zlequalizer";
-  version = "1.0.0";
+  version = "1.0.2";
 
   src = fetchFromGitHub {
     owner = "ZL-Audio";
     repo = "ZLEqualizer";
     tag = "${finalAttrs.version}";
-    hash = "sha256-9TmvjBXTrvR0+qnGDFhCczanxiry3d43QVn/pJLUREY=";
+    hash = "sha256-F0abEbX0Xpvx3/enk6XOW6v4m6HXa+g5HYDYAGRa+Lc=";
     fetchSubmodules = true;
   };
 
