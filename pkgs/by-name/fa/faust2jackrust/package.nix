@@ -2,6 +2,7 @@
   faust,
   libjack2,
   cargo,
+  rustc,
   binutils,
   gcc,
   gnumake,
@@ -17,6 +18,7 @@ faust.wrapWithBuildEnv {
   propagatedBuildInputs = [
     libjack2
     cargo
+    rustc
     binutils
     gcc
     gnumake
