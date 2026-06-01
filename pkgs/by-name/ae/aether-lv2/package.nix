@@ -8,6 +8,7 @@
   libGLU,
   libgbm,
   cmake,
+  validatePlugin,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -42,6 +43,18 @@ stdenv.mkDerivation (finalAttrs: {
     mkdir -p $out/lib/lv2
     cp -r aether.lv2 $out/lib/lv2
   '';
+
+  passthru.tests = validatePlugin {
+    plugin = finalAttrs.finalPackage;
+    # plugin-torture predates the LV2 Options feature; aether requires it
+    torture = false;
+    lv2lintFlags = [
+      # Pugl, the portable embeddable GL/Cairo widget toolkit aether uses for
+      # its X11/OpenGL UI; its symbols are bundled into the UI binary.
+      "-s"
+      "pugl*"
+    ];
+  };
 
   meta = {
     homepage = "https://dougal-s.github.io/Aether/";

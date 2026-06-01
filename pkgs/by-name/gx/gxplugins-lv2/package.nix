@@ -7,6 +7,7 @@
   cairo,
   lv2,
   pkg-config,
+  validatePlugin,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -40,6 +41,53 @@ stdenv.mkDerivation (finalAttrs: {
 
     runHook postConfigure
   '';
+
+  passthru.tests = validatePlugin {
+    plugin = finalAttrs.finalPackage;
+    # plugin-torture can't instantiate these (LV2 Options requirement).
+    torture = false;
+    # Each plugin in this bundle ships its own UI binary statically linked
+    # against guitarix's GUI helpers + cairo + libpng, so a lot of unrelated
+    # symbols end up exposed. Each pattern below whitelists one such family.
+    lv2lintFlags = [
+      # C++ symbols (Itanium ABI name mangling: _ZN..., _ZSt..., etc.)
+      "-s"
+      "_Z*"
+      # Resources embedded by `ld -r -b binary` / `objcopy -O binary` (PNGs,
+      # shaders): produces _binary_<name>_start / _end / _size symbols.
+      "-s"
+      "_binary_*"
+      # cairo graphics library re-exports from the bundled-in cairo bits.
+      "-s"
+      "cairo_*"
+      # guitarix's shared GUI helper layer (knobs, switches, drawing helpers).
+      "-s"
+      "gx_gui_*"
+      # Per-widget X11/Pugl event-callback exports (foo_event, bar_event, …).
+      "-s"
+      "*_event"
+      # X11/cairo expose-event handlers (controller_expose, widget_expose, …).
+      "-s"
+      "*_expose"
+      "-s"
+      "_expose"
+      # Top-level event-dispatch entry point in several gxplugin UIs.
+      "-s"
+      "event_handler"
+      # libpng re-exports (UIs load PNG resources directly).
+      "-s"
+      "png_*"
+      # Generic getters/setters exported from various gxplugin UIs
+      # (get_active_ctl_num, set_key_value, set_*_controller_active, …).
+      "-s"
+      "get_*"
+      "-s"
+      "set_*"
+      # Globals named `aligned` in some UI plugins (e.g. gx_bottlerocket_gui).
+      "-s"
+      "aligned"
+    ];
+  };
 
   meta = {
     homepage = "https://github.com/brummer10/GxPlugins.lv2";

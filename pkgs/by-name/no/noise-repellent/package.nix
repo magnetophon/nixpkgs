@@ -8,6 +8,7 @@
   cmake,
   libspecbleach,
   lv2,
+  validatePlugin,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -36,6 +37,12 @@ stdenv.mkDerivation (finalAttrs: {
     libspecbleach
     lv2
   ];
+
+  passthru.tests = validatePlugin {
+    plugin = finalAttrs.finalPackage;
+    # plugin-torture aborts on instantiate for this plugin.
+    torture = false;
+  };
 
   meta = {
     description = "LV2 plugin for broadband noise reduction";

@@ -8,6 +8,7 @@
   libGLU,
   lv2,
   pango,
+  validatePlugin,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -36,6 +37,12 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   enableParallelBuilding = true;
+
+  passthru.tests = validatePlugin {
+    plugin = finalAttrs.finalPackage;
+    # plugin-torture aborts on instantiate for this plugin.
+    torture = false;
+  };
 
   meta = {
     broken = (stdenv.hostPlatform.isLinux && stdenv.hostPlatform.isAarch64);

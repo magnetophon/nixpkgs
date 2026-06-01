@@ -11,6 +11,7 @@
   libx11,
   cairo,
   openssl,
+  validatePlugin,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -44,6 +45,18 @@ stdenv.mkDerivation (finalAttrs: {
   cmakeFlags = [
     "-DCMAKE_INSTALL_LIBDIR=lib"
   ];
+
+  passthru.tests = validatePlugin {
+    plugin = finalAttrs.finalPackage;
+    # plugin-torture can't instantiate geonkick (LV2 Options requirement).
+    torture = false;
+    lv2lintFlags = [
+      # Redkite (Rk), the C++ widget toolkit geonkick's UI is built on; its
+      # private symbols use the rk__ prefix and end up in the UI binary.
+      "-s"
+      "rk__*"
+    ];
+  };
 
   meta = {
     homepage = "https://gitlab.com/iurie-sw/geonkick";

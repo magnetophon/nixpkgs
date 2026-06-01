@@ -8,6 +8,7 @@
   pkg-config,
   meson,
   ninja,
+  validatePlugin,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -40,6 +41,12 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   strictDeps = true;
+
+  passthru.tests = validatePlugin {
+    plugin = finalAttrs.finalPackage;
+    # plugin-torture aborts on instantiate for these plugins.
+    torture = false;
+  };
 
   meta = {
     homepage = "https://drobilla.net/software/fomp.html";

@@ -7,6 +7,7 @@
   pkg-config,
   wafHook,
   python3,
+  validatePlugin,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -27,6 +28,21 @@ stdenv.mkDerivation (finalAttrs: {
     fftwSinglePrec
     lv2
   ];
+
+  passthru.tests = validatePlugin {
+    plugin = finalAttrs.finalPackage;
+    # plugin-torture can't instantiate these (LV2 Options requirement).
+    torture = false;
+    lv2lintFlags = [
+      # C++ symbols (Itanium ABI name mangling) from the C++ MDA plugin classes.
+      "-s"
+      "_Z*"
+      # LVZ is the in-tree VST-to-LV2 shim mda-lv2 uses to adapt the original
+      # MDA VST sources; the shim exports lvz_new_audioeffectx and friends.
+      "-s"
+      "lvz_*"
+    ];
+  };
 
   meta = {
     homepage = "http://drobilla.net/software/mda-lv2.html";

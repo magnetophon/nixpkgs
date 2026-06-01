@@ -6,6 +6,7 @@
   libGL,
   pkg-config,
   libx11,
+  validatePlugin,
 
   buildStandalone ? true,
   buildVST3 ? true,
@@ -91,6 +92,17 @@ stdenv.mkDerivation (finalAttrs: {
 
     runHook postInstall
   '';
+
+  passthru.tests = validatePlugin {
+    plugin = finalAttrs.finalPackage;
+    # DPF requires the LV2 Options feature, which plugin-torture doesn't advertise.
+    torture = false;
+    lv2lintFlags = [
+      # DPF's TTL-generator entry point linked into the plugin binary.
+      "-s"
+      "lv2_generate_ttl"
+    ];
+  };
 
   meta = {
     homepage = "https://github.com/michaelwillis/dragonfly-reverb";

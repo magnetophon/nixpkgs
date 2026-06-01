@@ -21,6 +21,7 @@
   buildLADSPA ? true,
   buildJACK ? true,
   buildGStreamer ? true,
+  validatePlugin,
 }:
 
 let
@@ -96,6 +97,14 @@ stdenv.mkDerivation (finalAttrs: {
   doCheck = true;
 
   enableParallelBuilding = true;
+
+  passthru.tests = validatePlugin {
+    plugin = finalAttrs.finalPackage;
+    # plugin-torture aborts on instantiate for these plugins.
+    torture = false;
+    # pluginval crashes on lsp-plugins' VST3 build; skip until upstream fixes.
+    pluginvalTests = false;
+  };
 
   meta = {
     description = "Collection of open-source audio plugins";

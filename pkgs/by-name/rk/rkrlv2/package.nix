@@ -11,6 +11,7 @@
   libjack2,
   libsamplerate,
   libsndfile,
+  validatePlugin,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -46,6 +47,18 @@ stdenv.mkDerivation (finalAttrs: {
     libsamplerate
     libsndfile
   ];
+
+  passthru.tests = validatePlugin {
+    plugin = finalAttrs.finalPackage;
+    # plugin-torture can't instantiate these (LV2 Options requirement).
+    torture = false;
+    lv2lintFlags = [
+      # C++ symbols (Itanium ABI name mangling) from the Rakarrack effect
+      # classes statically linked into each plugin.
+      "-s"
+      "_Z*"
+    ];
+  };
 
   meta = {
     description = "Rakarrak effects ported to LV2";
