@@ -1046,6 +1046,8 @@ with pkgs;
 
   testers = callPackage ../build-support/testers { };
 
+  validatePlugin = callPackage ../build-support/validate-plugin.nix { };
+
   ### TOOLS
 
   _7zz-rar = _7zz.override { enableUnfree = true; };
