@@ -31,7 +31,9 @@ stdenv.mkDerivation (finalAttrs: {
 
   passthru.tests = validatePlugin {
     plugin = finalAttrs.finalPackage;
-    # plugin-torture can't instantiate these (LV2 Options requirement).
+    # plugin-torture segfaults mid-run on one of the mda plugins (instantiate
+    # succeeds, but a later test crashes); re-enable once the offending
+    # plugin is isolated or the crash is fixed upstream.
     torture = false;
     lv2lintFlags = [
       # C++ symbols (Itanium ABI name mangling) from the C++ MDA plugin classes.

@@ -50,7 +50,8 @@ stdenv.mkDerivation (finalAttrs: {
 
   passthru.tests = validatePlugin {
     plugin = finalAttrs.finalPackage;
-    # plugin-torture can't instantiate these (LV2 Options requirement).
+    # plugin-torture aborts (SIGABRT) mid-run on one of the rkr plugins;
+    # re-enable once the offending plugin is isolated or fixed upstream.
     torture = false;
     lv2lintFlags = [
       # C++ symbols (Itanium ABI name mangling) from the Rakarrack effect

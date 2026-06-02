@@ -95,8 +95,6 @@ stdenv.mkDerivation (finalAttrs: {
 
   passthru.tests = validatePlugin {
     plugin = finalAttrs.finalPackage;
-    # DPF requires the LV2 Options feature, which plugin-torture doesn't advertise.
-    torture = false;
     lv2lintFlags = [
       # DPF's TTL-generator entry point linked into the plugin binary.
       "-s"

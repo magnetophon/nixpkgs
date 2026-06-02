@@ -48,8 +48,8 @@ stdenv.mkDerivation (finalAttrs: {
 
   passthru.tests = validatePlugin {
     plugin = finalAttrs.finalPackage;
-    # plugin-torture can't instantiate geonkick (LV2 Options requirement).
-    torture = false;
+    # Redkite is cairo-based (no GL); the UI instantiates under xvfb.
+    guiTests = true;
     lv2lintFlags = [
       # Redkite (Rk), the C++ widget toolkit geonkick's UI is built on; its
       # private symbols use the rk__ prefix and end up in the UI binary.

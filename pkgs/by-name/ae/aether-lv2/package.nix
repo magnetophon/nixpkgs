@@ -46,8 +46,6 @@ stdenv.mkDerivation (finalAttrs: {
 
   passthru.tests = validatePlugin {
     plugin = finalAttrs.finalPackage;
-    # plugin-torture predates the LV2 Options feature; aether requires it
-    torture = false;
     lv2lintFlags = [
       # Pugl, the portable embeddable GL/Cairo widget toolkit aether uses for
       # its X11/OpenGL UI; its symbols are bundled into the UI binary.

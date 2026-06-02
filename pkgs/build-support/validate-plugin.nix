@@ -51,25 +51,45 @@ let
   # torture enables more test categories. A level bundles one choice per tool.
   levels = {
     normal = {
-      pluginval = [ "--strictness-level" "5" ];
+      pluginval = [
+        "--strictness-level"
+        "5"
+      ];
       lv2lint = [ ];
       torture = [ ];
     };
     strict = {
-      pluginval = [ "--strictness-level" "8" ];
-      lv2lint = [ "-E" "warn" ];
+      pluginval = [
+        "--strictness-level"
+        "8"
+      ];
+      lv2lint = [
+        "-E"
+        "warn"
+      ];
       torture = [ "-e" ]; # particularly evil tests
     };
     pedantic = {
-      pluginval = [ "--strictness-level" "10" ];
-      lv2lint = [ "-E" "warn" "-E" "note" ];
-      torture = [ "-e" "-d" "-a" ]; # evil tests + trap/abort on denormals
+      pluginval = [
+        "--strictness-level"
+        "10"
+      ];
+      lv2lint = [
+        "-E"
+        "warn"
+        "-E"
+        "note"
+      ];
+      torture = [
+        "-e"
+        "-d"
+        "-a"
+      ]; # evil tests + trap/abort on denormals
     };
   };
   level =
-    levels.${strictness} or (throw
-      "validatePlugin: strictness must be one of ${lib.concatStringsSep ", " (lib.attrNames levels)}, got ${toString strictness}"
-    );
+    levels.${strictness}
+      or (throw "validatePlugin: strictness must be one of ${lib.concatStringsSep ", " (lib.attrNames levels)}, got ${toString strictness}");
   pluginvalStrict = level.pluginval;
   lv2lintStrict = level.lv2lint;
   tortureStrict = level.torture;
@@ -112,40 +132,51 @@ let
     export LV2_PATH="$plugin_lv2:${lv2}/lib/lv2"
   '';
 
-  lv2Tests =
-    {
-      # lv2lint takes plugin URIs (resolved via LV2_PATH). With guiTests = false
-      # we run with DISPLAY unset so lv2lint skips its compiled-in X11 UI tests
-      # (see lv2lintRunner); with guiTests = true it runs under xvfb. lv2lintFlags
-      # passes extra args, e.g. [ "-s" "lv2_generate_ttl" ] to whitelist a symbol.
-      lv2lint = mkTest "lv2lint" ([ lilv lv2lint ] ++ lib.optional guiTests xvfb-run) ''
-        ${lib.optionalString (!guiTests) "unset DISPLAY"}
-        ${lv2Setup}
-        if [ "$have_lv2" = 1 ]; then
-          for uri in "''${uris[@]}"; do
-            echo "== lv2lint $uri =="
-            ${lv2lintRunner}lv2lint ${lib.escapeShellArgs (lv2lintStrict ++ lv2lintFlags)} "$uri"
-          done
-        fi
-      '';
-    }
-    # plugin-torture takes the data .ttl path (-l for LV2, -p for the file), on
-    # LV2_PATH. It predates the LV2 Options feature and doesn't advertise it, so
-    # plugins that require Options (all DPF plugins) abort on instantiate; set
-    # torture = false for those. The durable fix is upstream in plugin-torture.
-    // lib.optionalAttrs torture {
-      plugin-torture = mkTest "torture" [ lilv plugin-torture ] ''
-        ${lv2Setup}
-        if [ "$have_lv2" = 1 ]; then
-          shopt -s nullglob
-          for ttl in "${plugin}"/lib/lv2/*.lv2/*.ttl; do
-            [ "$(basename "$ttl")" = manifest.ttl ] && continue
-            echo "== plugin-torture $ttl =="
-            plugin-torture ${lib.escapeShellArgs tortureStrict} -l -p "$ttl"
-          done
-        fi
-      '';
-    };
+  lv2Tests = {
+    # lv2lint takes plugin URIs (resolved via LV2_PATH). With guiTests = false
+    # we run with DISPLAY unset so lv2lint skips its compiled-in X11 UI tests
+    # (see lv2lintRunner); with guiTests = true it runs under xvfb. lv2lintFlags
+    # passes extra args, e.g. [ "-s" "lv2_generate_ttl" ] to whitelist a symbol.
+    lv2lint =
+      mkTest "lv2lint"
+        (
+          [
+            lilv
+            lv2lint
+          ]
+          ++ lib.optional guiTests xvfb-run
+        )
+        ''
+          ${lib.optionalString (!guiTests) "unset DISPLAY"}
+          ${lv2Setup}
+          if [ "$have_lv2" = 1 ]; then
+            for uri in "''${uris[@]}"; do
+              echo "== lv2lint $uri =="
+              ${lv2lintRunner}lv2lint ${lib.escapeShellArgs (lv2lintStrict ++ lv2lintFlags)} "$uri"
+            done
+          fi
+        '';
+  }
+  # plugin-torture takes the data .ttl path (-l for LV2, -p for the file), on
+  # LV2_PATH. The vendored copy is patched in-tree to advertise the LV2
+  # Options feature (see plugin-torture/lv2-options.patch); set torture =
+  # false only for plugins that still fail to instantiate after that.
+  // lib.optionalAttrs torture {
+    plugin-torture = mkTest "torture" [ lilv plugin-torture ] ''
+      ${lv2Setup}
+      if [ "$have_lv2" = 1 ]; then
+        shopt -s nullglob
+        for ttl in "${plugin}"/lib/lv2/*.lv2/*.ttl; do
+          [ "$(basename "$ttl")" = manifest.ttl ] && continue
+          # Skip TTLs that aren't a plugin's data file (UI TTLs, presets,
+          # etc.); plugin-torture's -p expects a file declaring a:lv2:Plugin.
+          grep -qE 'a[[:space:]]+(lv2:Plugin|<http://lv2plug.in/ns/lv2core#Plugin>)' "$ttl" || continue
+          echo "== plugin-torture $ttl =="
+          plugin-torture ${lib.escapeShellArgs tortureStrict} -l -p "$ttl"
+        done
+      fi
+    '';
+  };
 
   # The build sandbox has no X display, so pluginval's editor/GUI test
   # segfaults unless we either skip it or supply a virtual display.

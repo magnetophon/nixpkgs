@@ -44,7 +44,9 @@ stdenv.mkDerivation (finalAttrs: {
 
   passthru.tests = validatePlugin {
     plugin = finalAttrs.finalPackage;
-    # plugin-torture aborts on instantiate for these plugins.
+    # plugin-torture segfaults mid-run on the fomp plugins (likely on one of
+    # the "evil" inputs); re-enable once upstream is fixed or the offending
+    # plugin is isolated.
     torture = false;
   };
 

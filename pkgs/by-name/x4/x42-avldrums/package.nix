@@ -40,8 +40,6 @@ stdenv.mkDerivation (finalAttrs: {
 
   passthru.tests = validatePlugin {
     plugin = finalAttrs.finalPackage;
-    # plugin-torture aborts on instantiate for this plugin.
-    torture = false;
   };
 
   meta = {

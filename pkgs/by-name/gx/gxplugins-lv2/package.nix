@@ -44,8 +44,6 @@ stdenv.mkDerivation (finalAttrs: {
 
   passthru.tests = validatePlugin {
     plugin = finalAttrs.finalPackage;
-    # plugin-torture can't instantiate these (LV2 Options requirement).
-    torture = false;
     # Each plugin in this bundle ships its own UI binary statically linked
     # against guitarix's GUI helpers + cairo + libpng, so a lot of unrelated
     # symbols end up exposed. Each pattern below whitelists one such family.
