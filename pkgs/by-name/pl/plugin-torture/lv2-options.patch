@@ -1,0 +1,78 @@
+Advertise the LV2 Options feature so plugins that require it can instantiate.
+
+The Options feature has been part of LV2 since before plugin-torture's last
+update; modern plugin frameworks (notably DPF) refuse to instantiate when
+Options is missing and abort with "Options feature missing, cannot continue!".
+This wires the feature into the LV2Plugin constructor with conservative
+defaults for the options DPF and similar frameworks query at instantiate time
+(block lengths, sample rate, UI update rate). The values won't suit every
+plugin, but they're enough to let instantiate() succeed so plugin-torture can
+exercise the rest of its tests.
+
+--- a/src/lv2_plugin.cc	2026-06-02 01:03:17.500751557 +0200
++++ b/src/lv2_plugin.cc	2026-06-02 01:05:11.578967913 +0200
+@@ -19,6 +19,11 @@
+ 
+ #include "lv2_plugin.h"
+ #include "uri_map.h"
++#include "lv2/lv2plug.in/ns/ext/options/options.h"
++#include "lv2/lv2plug.in/ns/ext/buf-size/buf-size.h"
++#include "lv2/lv2plug.in/ns/ext/parameters/parameters.h"
++#include "lv2/lv2plug.in/ns/ext/atom/atom.h"
++#include "lv2/lv2plug.in/ns/extensions/ui/ui.h"
+ #include <lilv/lilv.h>
+ #include <boost/algorithm/string.hpp>
+ #include <stdexcept>
+@@ -63,15 +68,50 @@
+ 
+ static LV2World world;
+ 
++// Conservative defaults for options DPF and similar frameworks query at
++// instantiate(). Static so the pointers stored in the Options array stay
++// valid for the lifetime of the plugin instance.
++static const uint32_t min_block_length     = 64;
++static const uint32_t max_block_length     = 8192;
++static const uint32_t nominal_block_length = 1024;
++static const uint32_t sequence_size        = 8192;
++static const float    sample_rate          = 48000.0f;
++static const float    ui_update_rate       = 30.0f;
++
++static LV2_Options_Option options[7];
++static LV2_Feature        options_feature;
++
+ LV2Plugin::LV2Plugin (string const & filename)
+ 	: _plugin (0)
+ 	, _uri_map (URIMap::instance ())
+ {
+-	_features = (LV2_Feature**) calloc (4, sizeof (LV2_Feature*));
++	LV2_URID_Map* m = _uri_map.urid_map ();
++	uint32_t atom_Int   = m->map (m->handle, LV2_ATOM__Int);
++	uint32_t atom_Float = m->map (m->handle, LV2_ATOM__Float);
++
++	options[0] = { LV2_OPTIONS_INSTANCE, 0, m->map (m->handle, LV2_BUF_SIZE__minBlockLength),
++	               sizeof (uint32_t), atom_Int,   &min_block_length };
++	options[1] = { LV2_OPTIONS_INSTANCE, 0, m->map (m->handle, LV2_BUF_SIZE__maxBlockLength),
++	               sizeof (uint32_t), atom_Int,   &max_block_length };
++	options[2] = { LV2_OPTIONS_INSTANCE, 0, m->map (m->handle, LV2_BUF_SIZE__nominalBlockLength),
++	               sizeof (uint32_t), atom_Int,   &nominal_block_length };
++	options[3] = { LV2_OPTIONS_INSTANCE, 0, m->map (m->handle, LV2_BUF_SIZE__sequenceSize),
++	               sizeof (uint32_t), atom_Int,   &sequence_size };
++	options[4] = { LV2_OPTIONS_INSTANCE, 0, m->map (m->handle, LV2_PARAMETERS__sampleRate),
++	               sizeof (float),    atom_Float, &sample_rate };
++	options[5] = { LV2_OPTIONS_INSTANCE, 0, m->map (m->handle, LV2_UI__updateRate),
++	               sizeof (float),    atom_Float, &ui_update_rate };
++	options[6] = { LV2_OPTIONS_INSTANCE, 0, 0, 0, 0, NULL };
++
++	options_feature.URI  = LV2_OPTIONS__options;
++	options_feature.data = options;
++
++	_features = (LV2_Feature**) calloc (5, sizeof (LV2_Feature*));
+ 	_features[0] = _uri_map.uri_map_feature ();
+ 	_features[1] = _uri_map.urid_map_feature ();
+ 	_features[2] = _uri_map.urid_unmap_feature ();
+-	_features[3] = 0;
++	_features[3] = &options_feature;
++	_features[4] = 0;
+ 
+ 	LilvPlugins const * plugins = lilv_world_get_all_plugins (world.world);
+ 

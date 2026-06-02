@@ -23,6 +23,13 @@ stdenv.mkDerivation {
     sha256 = "1xyhvhm85d9z0kw716cjllrrzksn4s4bw34layg8hf4m5m31sp2p";
   };
 
+  patches = [
+    # Advertise the LV2 Options feature so plugins that require it (DPF and
+    # others) can be instantiated. Without this, plugin-torture aborts at
+    # instantiate() with "Options feature missing, cannot continue!".
+    ./lv2-options.patch
+  ];
+
   nativeBuildInputs = [ pkg-config ];
   buildInputs = [
     boost
