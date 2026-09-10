@@ -88,14 +88,14 @@ let
 
   generic = stdenv.mkDerivation (finalAttrs: {
     pname = "ardour";
-    version = "9.7";
+    version = "9.8";
 
     # We can't use `fetchFromGitea` here, as attempting to fetch release archives from git.ardour.org
     # result in an empty archive. See https://tracker.ardour.org/view.php?id=7328 for more info.
     src = fetchgit {
       url = "git://git.ardour.org/ardour/ardour.git";
       tag = finalAttrs.version;
-      hash = "sha256-6gtlnk/oPXWJcN5tcb1r7dXyLpHPTSJwd8VfOjjFnWQ=";
+      hash = "sha256-h+JS3T2pr/VOtR9E2NMY4gd3IxL0leWATUV52u459iM=";
     };
 
     patches = [
