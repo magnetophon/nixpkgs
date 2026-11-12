@@ -21,6 +21,7 @@
   libGL,
   libxcursor,
   libxext,
+  libxi,
   libxinerama,
   libxrandr,
   libepoxy,
@@ -31,13 +32,13 @@
 
 clangStdenv.mkDerivation (finalAttrs: {
   pname = "zlcompressor";
-  version = "0.5.0";
+  version = "0.6.1";
 
   src = fetchFromGitHub {
     owner = "ZL-Audio";
     repo = "ZLCompressor";
     tag = finalAttrs.version;
-    hash = "sha256-vSGadtUm6AEWEaNr3gCybEtc7NY3s3SQi8UVXoRsKCA=";
+    hash = "sha256-jDa6idXiLm8y2svdiC0vZLcopfoBe8mFAGcY3SCwHyA=";
     fetchSubmodules = true;
   };
 
@@ -62,6 +63,7 @@ clangStdenv.mkDerivation (finalAttrs: {
     libGL
     libxcursor
     libxext
+    libxi
     libxinerama
     libxrandr
     libepoxy
@@ -70,10 +72,16 @@ clangStdenv.mkDerivation (finalAttrs: {
   ];
 
   # JUCE dlopen's these at runtime, crashes without them
+  # -lXi is essential: JUCE requests the unversioned
+  # "libXi.so", which no host has already loaded, and when that dlopen fails
+  # JUCE still believes XInput2 is present (the stub for the missing
+  # XIQueryVersion returns 0, which equals Success), so it discards all core
+  # pointer events and the GUI stops responding to the mouse entirely.
   env = lib.optionalAttrs clangStdenv.hostPlatform.isLinux {
     NIX_LDFLAGS = toString [
       "-lX11"
       "-lXext"
+      "-lXi"
       "-lXcursor"
       "-lXinerama"
       "-lXrandr"
